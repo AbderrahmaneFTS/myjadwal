@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جدولي — نظام التنظيم الاحترافي</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --hour-height: 88px;
+    --bg:#060911;
+    --surface:#0d1321;
+    --surface-2:#131a2c;
+    --surface-3:#1a2238;
+    --border:rgba(148,163,184,0.10);
+    --border-strong:rgba(148,163,184,0.20);
+    --text:#e8edf5;
+    --text-muted:#8b95a8;
+    --primary:#6366f1;
+    --primary-light:#818cf8;
+    --success:#10b981;
+    --warning:#f59e0b;
+    --danger:#ef4444;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Cairo',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99,102,241,0.15), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(139,92,246,0.08), transparent);
+    background-attachment:fixed;
+    font-size:15px;
+  }
+  .font-time{font-family:'JetBrains Mono',monospace;direction:ltr;font-weight:700;letter-spacing:.02em}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:rgba(148,163,184,0.22);border-radius:10px}
+  ::-webkit-scrollbar-thumb:hover{background:rgba(148,163,184,0.4)}
+
+  .glass{
+    background:rgba(19,26,44,0.7);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border:1px solid var(--border);
+  }
+  .glass.sleep{
+    background:rgba(76,29,149,0.18);
+    border-color:rgba(167,139,250,0.35);
+    box-shadow:0 0 32px -8px rgba(139,92,246,0.35);
+  }
+  .card-surface{
+    background:var(--surface);
+    border:1px solid var(--border);
+  }
+  .session-card{
+    transition:transform .18s cubic-bezier(.4,0,.2,1), box-shadow .18s, filter .18s;
+    cursor:pointer;
+  }
+  .session-card:hover{
+    transform:translateY(-2px) scale(1.012);
+    z-index:25;
+    box-shadow:0 12px 32px -8px rgba(0,0,0,0.65);
+    filter:brightness(1.1);
+  }
+  .session-card.is-now{
+    animation:nowPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes nowPulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0.5), 0 8px 24px -4px rgba(0,0,0,0.5)}
+    50%{box-shadow:0 0 0 7px rgba(16,185,129,0), 0 8px 24px -4px rgba(0,0,0,0.5)}
+  }
+
+  .fade-in{animation:fadeIn .3s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .modal-enter{animation:modalIn .22s cubic-bezier(.4,0,.2,1)}
+  @keyframes modalIn{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:none}}
+
+  .toast-enter{animation:toastIn .3s cubic-bezier(.4,0,.2,1)}
+  @keyframes toastIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:none}}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:11px 20px;border-radius:12px;font-weight:700;font-size:14px;
+    cursor:pointer;transition:all .15s;border:none;font-family:inherit;
+  }
+  .btn:active{transform:scale(.96)}
+  .btn-primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;box-shadow:0 4px 16px -4px rgba(99,102,241,.5)}
+  .btn-primary:hover{box-shadow:0 6px 20px -4px rgba(99,102,241,.7);filter:brightness(1.08)}
+  .btn-ghost{background:rgba(148,163,184,.08);color:var(--text);border:1px solid var(--border-strong)}
+  .btn-ghost:hover{background:rgba(148,163,184,.15)}
+  .btn-success{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 4px 16px -4px rgba(16,185,129,.5)}
+  .btn-success:hover{filter:brightness(1.08)}
+  .btn-danger{background:rgba(239,68,68,.12);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
+  .btn-danger:hover{background:rgba(239,68,68,.2)}
+
+  .note-textarea{
+    width:100%;background:rgba(6,9,17,.6);border:1.5px solid var(--border-strong);
+    border-radius:14px;padding:14px 16px;font-family:'Cairo',sans-serif;
+    font-size:15px;color:var(--text);resize:vertical;min-height:120px;
+    transition:border-color .15s, box-shadow .15s;outline:none;line-height:1.8;
+  }
+  .note-textarea:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(99,102,241,.15)}
+  .note-textarea::placeholder{color:var(--text-muted)}
+
+  .note-display{
+    background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(139,92,246,.05));
+    border:1px solid rgba(99,102,241,.25);
+    border-radius:14px;padding:16px 18px;
+    line-height:1.85;font-size:15px;color:#dbe4f0;
+    white-space:pre-wrap;word-break:break-word;
+    max-height:280px;overflow-y:auto;
+  }
+  .note-display.empty{
+    background:rgba(148,163,184,.03);
+    border:1.5px dashed rgba(148,163,184,.2);
+    color:var(--text-muted);text-align:center;padding:28px 16px;
+    font-style:italic;font-size:14px;
+  }
+
+  .day-chip{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 16px;border-radius:14px;font-weight:800;font-size:15px;
+    cursor:pointer;transition:all .15s;border:1.5px solid transparent;
+    width:100%;text-align:right;font-family:inherit;color:var(--text);
+    background:rgba(148,163,184,.04);
+  }
+  .day-chip:hover{background:rgba(148,163,184,.09);border-color:var(--border-strong)}
+  .day-chip.active{
+    background:linear-gradient(135deg,rgba(99,102,241,.25),rgba(139,92,246,.15));
+    border-color:rgba(99,102,241,.5);
+    box-shadow:0 4px 20px -6px rgba(99,102,241,.5), inset 0 1px 0 rgba(255,255,255,.08);
+  }
+
+  .theme-badge{
+    display:inline-flex;align-items:center;padding:4px 11px;border-radius:8px;
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:800;letter-spacing:.03em;
+    white-space:nowrap;
+  }
+
+  .stat-pill{
+    display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;
+    font-size:13px;font-weight:800;background:rgba(148,163,184,.06);
+    border:1px solid var(--border);color:#b8c2d4;
+  }
+
+  .time-label{
+    display:inline-block;padding:5px 12px;border-radius:10px;
+    font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:800;
+    background:linear-gradient(135deg,rgba(19,26,44,.98),rgba(13,19,33,.98));
+    color:#e2e8f0;
+    border:1.5px solid rgba(148,163,184,.28);
+    box-shadow:0 2px 10px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
+    letter-spacing:.03em;direction:ltr;
+  }
+
+  .cal-cell{
+    aspect-ratio:1;border-radius:10px;padding:7px;border:1px solid var(--border);
+    background:rgba(13,19,33,.6);cursor:pointer;transition:all .15s;
+    display:flex;flex-direction:column;min-height:88px;position:relative;
+    font-family:inherit;color:var(--text);text-align:right;
+  }
+  .cal-cell:hover{border-color:rgba(99,102,241,.6);background:rgba(99,102,241,.08);transform:translateY(-1px)}
+  .cal-cell.is-today{
+    background:linear-gradient(135deg,rgba(99,102,241,.25),rgba(139,92,246,.12));
+    border-color:rgba(99,102,241,.6);
+  }
+  .cal-cell.is-empty{background:transparent;border:1px dashed rgba(148,163,184,.08);cursor:default;pointer-events:none}
+
+  .presence-dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+
+  .notif-btn.enabled{background:rgba(16,185,129,.15);color:#6ee7b7;border:1px solid rgba(16,185,129,.4);cursor:default}
+
+  .sleep-moon{animation:float 3s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+
+  @media print{
+    @page{size:A4 landscape;margin:5mm}
+    body{background:#fff!important;color:#0f172a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .no-print{display:none!important}
+    .print-area{overflow:visible!important;box-shadow:none!important;border:1px solid #94a3b8!important;background:#fff!important}
+    .day-col{background:#fff!important;border-color:#cbd5e1!important}
+    .time-axis-col{background:#f1f5f9!important;border-color:#cbd5e1!important}
+    .grid-line{border-color:#e2e8f0!important}
+    .session-card{box-shadow:none!important;border-width:1.5px!important}
+    .time-label{color:#0f172a!important;background:#f1f5f9!important;border-color:#cbd5e1!important}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="sticky top-0 z-40 no-print" style="background:rgba(6,9,17,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)">
+  <div class="max-w-[1720px] mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+
+    <!-- Logo -->
+    <div class="flex items-center gap-3">
+      <div class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);box-shadow:0 8px 24px -6px rgba(99,102,241,.6)">
+        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2.5"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <div>
+        <h1 class="text-xl font-black text-white leading-tight">جدولي</h1>
+        <p class="text-[12px] font-semibold" style="color:var(--text-muted)">نظام تنظيم احترافي</p>
+      </div>
+    </div>
+
+    <!-- Now Widget -->
+    <div id="now-widget" class="flex items-center gap-4 px-5 py-2.5 rounded-2xl glass min-w-[380px] transition-all duration-500">
+      <div class="text-center pl-4" style="border-left:1px solid var(--border)">
+        <div id="live-clock" class="font-time text-2xl text-indigo-300 tracking-tight">--:--:--</div>
+        <div id="live-date" class="text-[12px] font-semibold mt-0.5" style="color:var(--text-muted)">—</div>
+      </div>
+      <div class="flex-grow min-w-0">
+        <div class="flex items-center gap-1.5 mb-1">
+          <span id="now-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="now-label" class="text-[11px] font-black uppercase tracking-wider" style="color:var(--text-muted)">الآن</span>
+        </div>
+        <div id="now-activity" class="text-base font-extrabold text-emerald-300 truncate">—</div>
+        <div id="now-remaining" class="text-[12px] font-time mt-0.5" style="color:var(--text-muted)">—</div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-2">
+      <button id="btn-calendar" class="btn btn-ghost">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span class="hidden sm:inline">التقويم</span>
+      </button>
+      <button id="btn-enable-notif" class="btn notif-btn" style="background:rgba(245,158,11,.12);color:#fcd34d;border:1px solid rgba(245,158,11,.35)">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        <span class="hidden sm:inline">الإشعارات</span>
+      </button>
+      <button onclick="window.print()" class="btn btn-primary">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        <span class="hidden sm:inline">طباعة</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ MAIN ============ -->
+<div class="flex-grow w-full max-w-[1720px] mx-auto flex gap-5 p-4 sm:p-6 no-print">
+
+  <!-- SIDEBAR -->
+  <aside class="w-72 shrink-0 hidden md:flex flex-col gap-4">
+    <div class="rounded-2xl card-surface p-3 shadow-xl">
+      <div class="text-[11px] font-black uppercase tracking-widest px-2 mb-2" style="color:var(--text-muted)">أيام الأسبوع</div>
+      <nav id="days-nav" class="flex flex-col gap-1.5"></nav>
+    </div>
+
+    <div class="rounded-2xl card-surface overflow-hidden shadow-xl">
+      <div class="px-4 py-3 flex items-center justify-between" style="border-bottom:1px solid var(--border);background:rgba(99,102,241,.06)">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <span class="text-sm font-extrabold text-white">ملاحظة اليوم</span>
+        </div>
+        <button id="day-note-edit-btn" class="w-8 h-8 rounded-lg flex items-center justify-center transition hover:bg-white/10" style="color:var(--text-muted)" title="تعديل">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+      </div>
+
+      <div class="p-3">
+        <div id="day-note-view">
+          <div id="day-note-display" class="note-display empty" style="min-height:auto;padding:16px;font-size:14px">لا توجد ملاحظة لهذا اليوم</div>
+          <button id="day-note-add-btn" class="btn btn-ghost w-full mt-2" style="font-size:13px;padding:9px">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            إضافة ملاحظة
+          </button>
+        </div>
+
+        <div id="day-note-edit" class="hidden">
+          <textarea id="day-note-textarea" class="note-textarea" style="min-height:110px;font-size:14px" placeholder="اكتب ملاحظتك..."></textarea>
+          <div class="flex gap-2 mt-2">
+            <button id="day-note-save" class="btn btn-success flex-grow" style="padding:9px;font-size:13px">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              حفظ
+            </button>
+            <button id="day-note-cancel" class="btn btn-ghost" style="padding:9px 14px;font-size:13px">إلغاء</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="flex-grow min-w-0">
+
+    <div class="md:hidden mb-4">
+      <select id="mobile-day-select" class="w-full px-4 py-3 rounded-xl font-bold text-base outline-none" style="background:var(--surface-2);border:1.5px solid var(--border-strong);color:var(--text)"></select>
+    </div>
+
+    <section id="view-day" class="fade-in">
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-2 h-12 rounded-full" style="background:linear-gradient(180deg,#6366f1,#8b5cf6)"></div>
+          <div>
+            <h2 id="day-title" class="text-3xl font-black text-white">—</h2>
+            <p id="day-subtitle" class="text-sm font-semibold mt-0.5" style="color:var(--text-muted)">—</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <div class="stat-pill">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span id="day-count">—</span>
+          </div>
+          <div class="stat-pill">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <span id="day-hours">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="print-area rounded-2xl overflow-x-auto shadow-2xl card-surface">
+        <div class="min-w-[900px] flex">
+          <div id="time-axis" class="time-axis-col w-[118px] shrink-0 relative select-none" style="border-left:1px solid var(--border);background:linear-gradient(180deg,rgba(6,9,17,.7),rgba(6,9,17,.5))"></div>
+          <div id="day-grid" class="day-col flex-grow relative" style="background:rgba(13,19,33,.4)"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-calendar" class="hidden fade-in">
+      <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-2 h-12 rounded-full" style="background:linear-gradient(180deg,#10b981,#059669)"></div>
+          <div>
+            <h2 class="text-3xl font-black text-white">التقويم الشهري</h2>
+            <p class="text-sm font-semibold mt-0.5" style="color:var(--text-muted)">نظرة عامة على أنشطتك</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="cal-prev" class="w-11 h-11 rounded-xl flex items-center justify-center transition hover:bg-white/10" style="background:var(--surface-2);border:1px solid var(--border-strong);color:var(--text)">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <span id="cal-month" class="text-base font-extrabold text-white min-w-[170px] text-center"></span>
+          <button id="cal-next" class="w-11 h-11 rounded-xl flex items-center justify-center transition hover:bg-white/10" style="background:var(--surface-2);border:1px solid var(--border-strong);color:var(--text)">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-7 gap-2 mb-2">
+        <div class="text-center text-xs font-black uppercase tracking-wider py-2" style="color:var(--text-muted)">أحد</div>
+        <div class="text-center text-xs font-black uppercase tracking-wider py-2" style="color:var(--text-muted)">إثنين</div>
+        <div class="text-center text-xs font-black uppercase tracking-wider py-2" style="color:var(--text-muted)">ثلاثاء</div>
+        <div class="text-center text-xs font-black uppercase tracking-wider py-2" style="color:var(--text-muted)">أربعاء</div>
+        <div class="text-center text-xs font-black uppercase tracking-wider py-2" style="color:var(--text-muted)">خميس</div>
+        <div class="text-center text-xs font-black uppercase tracking-wider py-2" style="color:var(--text-muted)">جمعة</div>
+        <div class="text-center text-xs font-black uppercase tracking-wider py-2" style="color:var(--text-muted)">سبت</div>
+      </div>
+
+      <div id="cal-grid" class="grid grid-cols-7 gap-2"></div>
+
+      <div id="cal-detail" class="mt-5 rounded-2xl card-surface p-5 hidden shadow-xl"></div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ============ SESSION NOTE MODAL ============ -->
+<div id="modal-note" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,.7);backdrop-filter:blur(8px)">
+  <div class="modal-enter w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl" style="background:var(--surface-2);border:1px solid var(--border-strong)">
+    <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(99,102,241,.12),rgba(139,92,246,.06))">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:rgba(99,102,241,.2);color:#a5b4fc" id="modal-icon-wrap">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div>
+          <h3 id="modal-title" class="font-extrabold text-white text-lg leading-tight">ملاحظة النشاط</h3>
+          <p id="modal-sub" class="text-[13px] font-semibold mt-0.5" style="color:var(--text-muted)">—</p>
+        </div>
+      </div>
+      <button onclick="closeNoteModal()" class="w-9 h-9 rounded-lg flex items-center justify-center transition hover:bg-white/10" style="color:var(--text-muted)">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="p-5">
+      <div id="modal-view-mode">
+        <div id="modal-note-display" class="note-display empty">لا توجد ملاحظة بعد</div>
+        <div class="flex gap-2 mt-4">
+          <button id="modal-edit-btn" class="btn btn-ghost flex-grow">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            <span id="modal-edit-label">تعديل الملاحظة</span>
+          </button>
+          <button id="modal-delete-btn" class="btn btn-danger hidden">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            حذف
+          </button>
+        </div>
+      </div>
+
+      <div id="modal-edit-mode" class="hidden">
+        <textarea id="modal-textarea" class="note-textarea" placeholder="اكتب ملاحظتك حول هذا النشاط..."></textarea>
+        <div class="flex items-center justify-between mt-2">
+          <span id="modal-char-count" class="text-[12px] font-time" style="color:var(--text-muted)">0 / 1000</span>
+          <span class="text-[12px] font-semibold" style="color:var(--text-muted)">حفظ تلقائي معتمد</span>
+        </div>
+        <div class="flex gap-2 mt-3">
+          <button id="modal-save-btn" class="btn btn-success flex-grow">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            حفظ الملاحظة
+          </button>
+          <button id="modal-cancel-btn" class="btn btn-ghost">إلغاء</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="fixed top-24 left-1/2 -translate-x-1/2 z-[60] flex flex-col gap-2 items-center pointer-events-none"></div>
+
+<script>
+/* =========================================================
+   DATA
+   ========================================================= */
+const START_HOUR = 4.5, END_HOUR = 21.0, HOUR_HEIGHT = 88;
+const TOTAL_HEIGHT = (END_HOUR - START_HOUR) * HOUR_HEIGHT;
+const SLEEP_START_MIN = END_HOUR * 60;      // 21:00 = 1260
+const SLEEP_END_MIN   = START_HOUR * 60;    // 04:30 = 270
+
+const ICONS = {
+  math:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/></svg>`,
+  physics:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(30 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(-30 12 12)"/></svg>`,
+  svt:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/></svg>`,
+  book:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+  globe:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+  mosque:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 3c-3 2.5-5 5-5 8h10c0-3-2-5.5-5-8z"/><path d="M4 11v10h16V11"/><path d="M9 21v-5a3 3 0 0 1 6 0v5"/></svg>`,
+  philosophy:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-8h6v8"/></svg>`,
+  trophy:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>`,
+  code:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
+  terminal:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>`,
+  soccer:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="12 7 16.5 10.2 14.8 15.5 9.2 15.5 7.5 10.2"/></svg>`,
+  spanish:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
+  quran:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
+  chess:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M8 16l-1.447.724a1 1 0 0 0-.553.894V20h12v-2.382a1 1 0 0 0-.553-.894L16 16"/><path d="M8.5 16h7l1-5-3.5-2 1.5-3.5L11 4 8 6.5l1 3.5-2.5 1.5 2 4.5z"/></svg>`,
+  school:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-8h6v8"/></svg>`
+};
+
+const THEMES = {
+  science:{bg:"linear-gradient(135deg,#059669,#065f46)",border:"#34d399",badge:"rgba(52,211,153,.22)",badgeText:"#6ee7b7"},
+  regional:{bg:"linear-gradient(135deg,#0284c7,#0c4a6e)",border:"#38bdf8",badge:"rgba(56,189,248,.22)",badgeText:"#7dd3fc"},
+  skill:{bg:"linear-gradient(135deg,#d97706,#78350f)",border:"#fbbf24",badge:"rgba(251,191,36,.22)",badgeText:"#fcd34d"},
+  sport:{bg:"linear-gradient(135deg,#e11d48,#7f1d1d)",border:"#fb7185",badge:"rgba(251,113,133,.22)",badgeText:"#fda4af"},
+  spanish:{bg:"linear-gradient(135deg,#7c3aed,#4c1d95)",border:"#a78bfa",badge:"rgba(167,139,250,.22)",badgeText:"#c4b5fd"},
+  quran:{bg:"linear-gradient(135deg,#0d9488,#134e4a)",border:"#2dd4bf",badge:"rgba(45,212,191,.22)",badgeText:"#5eead4"},
+  chess:{bg:"linear-gradient(135deg,#475569,#1e293b)",border:"#94a3b8",badge:"rgba(148,163,184,.22)",badgeText:"#cbd5e1"},
+  school:{bg:"linear-gradient(135deg,#374151,#111827)",border:"#6b7280",badge:"rgba(107,114,128,.28)",badgeText:"#d1d5db"}
+};
+
+const SCHEDULE_DATA = [
+  { day:"الإثنين", sessions:[
+    { start:"04:30", end:"05:00", title:"قرآن", icon:"quran", theme:"quran" },
+    { start:"05:00", end:"07:00", title:"رياضيات", icon:"math", theme:"science" },
+    { start:"07:30", end:"12:30", title:"مدرسة", icon:"school", theme:"school" },
+    { start:"13:00", end:"13:30", title:"SVT", icon:"svt", theme:"science" },
+    { start:"13:30", end:"18:30", title:"مدرسة", icon:"school", theme:"school" },
+    { start:"19:00", end:"19:30", title:"إسبانية", icon:"spanish", theme:"spanish" },
+    { start:"19:30", end:"20:30", title:"فرنسية", icon:"book", theme:"regional" }
+  ]},
+  { day:"الثلاثاء", sessions:[
+    { start:"04:30", end:"05:00", title:"قرآن", icon:"quran", theme:"quran" },
+    { start:"05:00", end:"07:00", title:"فيزياء", icon:"physics", theme:"science" },
+    { start:"07:30", end:"10:30", title:"مدرسة", icon:"school", theme:"school" },
+    { start:"10:30", end:"11:30", title:"فرنسية", icon:"book", theme:"regional" },
+    { start:"11:30", end:"12:00", title:"إسبانية", icon:"spanish", theme:"spanish" },
+    { start:"12:00", end:"13:00", title:"اجتماعيات", icon:"globe", theme:"regional" },
+    { start:"13:30", end:"17:30", title:"مدرسة", icon:"school", theme:"school" },
+    { start:"17:30", end:"18:30", title:"أولمبياد رياضيات", icon:"trophy", theme:"skill" },
+    { start:"18:30", end:"19:30", title:"برمجة", icon:"code", theme:"skill" },
+    { start:"19:30", end:"20:30", title:"كرة قدم", icon:"soccer", theme:"sport" }
+  ]},
+  { day:"الأربعاء", sessions:[
+    { start:"04:30", end:"05:00", title:"قرآن", icon:"quran", theme:"quran" },
+    { start:"05:00", end:"07:00", title:"رياضيات", icon:"math", theme:"science" },
+    { start:"07:30", end:"12:30", title:"مدرسة", icon:"school", theme:"school" },
+    { start:"13:00", end:"14:00", title:"برمجة", icon:"code", theme:"skill" },
+    { start:"14:00", end:"14:30", title:"إسبانية", icon:"spanish", theme:"spanish" },
+    { start:"14:30", end:"15:30", title:"إسلامية", icon:"mosque", theme:"regional" },
+    { start:"15:30", end:"18:30", title:"مدرسة", icon:"school", theme:"school" },
+    { start:"18:30", end:"19:30", title:"كرة قدم (بدني)", icon:"soccer", theme:"sport" }
+  ]},
+  { day:"الخميس", sessions:[
+    { start:"04:30", end:"05:00", title:"قرآن", icon:"quran", theme:"quran" },
+    { start:"05:00", end:"07:00", title:"فيزياء", icon:"physics", theme:"science" },
+    { start:"07:30", end:"12:30", title:"مدرسة", icon:"school", theme:"school" },
+    { start:"13:00", end:"14:00", title:"إسبانية", icon:"spanish", theme:"spanish" },
+    { start:"14:00", end:"15:00", title:"عربية", icon:"book", theme:"regional" },
+    { start:"15:30", end:"18:30", title:"مدرسة", icon:"school", theme:"school" },
+    { start:"18:30", end:"19:30", title:"أولمبياد رياضيات", icon:"trophy", theme:"skill" },
+    { start:"19:30", end:"20:30", title:"كرة قدم", icon:"soccer", theme:"sport" }
+  ]},
+  { day:"الجمعة", sessions:[
+    { start:"04:30", end:"05:00", title:"قرآن", icon:"quran", theme:"quran" },
+    { start:"05:00", end:"07:00", title:"رياضيات", icon:"math", theme:"science" },
+    { start:"07:30", end:"12:30", title:"مدرسة", icon:"school", theme:"school" },
+    { start:"13:00", end:"14:00", title:"برمجة", icon:"code", theme:"skill" },
+    { start:"14:00", end:"14:30", title:"إسبانية", icon:"spanish", theme:"spanish" },
+    { start:"14:30", end:"15:30", title:"فرنسية", icon:"book", theme:"regional" },
+    { start:"15:30", end:"18:30", title:"مدرسة", icon:"school", theme:"school" },
+    { start:"18:30", end:"19:30", title:"كرة قدم", icon:"soccer", theme:"sport" },
+    { start:"20:00", end:"20:30", title:"تحليل كرة", icon:"soccer", theme:"sport" }
+  ]},
+  { day:"السبت", sessions:[
+    { start:"04:30", end:"05:00", title:"قرآن", icon:"quran", theme:"quran" },
+    { start:"05:00", end:"07:00", title:"فيزياء", icon:"physics", theme:"science" },
+    { start:"07:30", end:"12:30", title:"مدرسة", icon:"school", theme:"school" },
+    { start:"13:00", end:"14:00", title:"فلسفة", icon:"philosophy", theme:"regional" },
+    { start:"14:00", end:"14:30", title:"إسبانية", icon:"spanish", theme:"spanish" },
+    { start:"14:30", end:"15:30", title:"اجتماعيات", icon:"globe", theme:"regional" },
+    { start:"16:00", end:"18:00", title:"كرة قدم (مكثف)", icon:"soccer", theme:"sport" },
+    { start:"18:00", end:"19:00", title:"أولمبياد رياضيات", icon:"trophy", theme:"skill" },
+    { start:"19:00", end:"20:00", title:"Codeforces", icon:"terminal", theme:"skill" },
+    { start:"20:30", end:"21:00", title:"شطرنج", icon:"chess", theme:"chess" }
+  ]},
+  { day:"الأحد", sessions:[
+    { start:"04:30", end:"05:00", title:"قرآن", icon:"quran", theme:"quran" },
+    { start:"05:00", end:"07:00", title:"رياضيات", icon:"math", theme:"science" },
+    { start:"07:00", end:"07:30", title:"راحة", icon:"book", theme:"school" },
+    { start:"07:30", end:"09:00", title:"أولمبياد رياضيات", icon:"trophy", theme:"skill" },
+    { start:"09:30", end:"11:30", title:"كرة قدم (مباراة)", icon:"soccer", theme:"sport" },
+    { start:"12:00", end:"13:00", title:"إسلامية", icon:"mosque", theme:"regional" },
+    { start:"13:00", end:"13:30", title:"إسبانية", icon:"spanish", theme:"spanish" },
+    { start:"13:30", end:"14:30", title:"فرنسية", icon:"book", theme:"regional" },
+    { start:"15:00", end:"16:00", title:"Codeforces", icon:"terminal", theme:"skill" },
+    { start:"16:30", end:"17:30", title:"عربية", icon:"book", theme:"regional" },
+    { start:"17:30", end:"18:00", title:"تحليل كرة", icon:"soccer", theme:"sport" },
+    { start:"18:30", end:"19:30", title:"فلسفة", icon:"philosophy", theme:"regional" },
+    { start:"20:00", end:"20:30", title:"شطرنج", icon:"chess", theme:"chess" }
+  ]}
+];
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+function timeToMinutes(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
+function pad(n){return String(n).padStart(2,'0');}
+function todayIndex(){const d=new Date().getDay();return d===0?6:d-1;}
+function storageKey(){return 'schedule_pro_v2';}
+function loadStore(){
+  try{return JSON.parse(localStorage.getItem(storageKey()))||{notes:{},dayNotes:{}};}
+  catch(e){return {notes:{},dayNotes:{}};}
+}
+function saveStore(s){localStorage.setItem(storageKey(),JSON.stringify(s));}
+let STORE = loadStore();
+
+/* =========================================================
+   STATE
+   ========================================================= */
+let activeDay = todayIndex();
+let calendarMode = false;
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+let noteCtx = { dayIdx:null, sessIdx:null, mode:'view' };
+let dayNoteEditing = false;
+let wasSleeping = false; // لتتبع تغيّر حالة النوم
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+function toast(msg, type='success'){
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  const colors = {
+    success:'background:linear-gradient(135deg,#10b981,#059669);color:#fff',
+    info:'background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff',
+    danger:'background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff'
+  };
+  t.className='toast-enter px-6 py-3.5 rounded-xl font-bold text-sm shadow-2xl';
+  t.style.cssText = colors[type] + ';box-shadow:0 10px 40px -10px rgba(0,0,0,.6)';
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)},2200);
+}
+
+/* =========================================================
+   NAV
+   ========================================================= */
+function renderNav(){
+  const nav = document.getElementById('days-nav');
+  nav.innerHTML = '';
+  SCHEDULE_DATA.forEach((d,i)=>{
+    const btn = document.createElement('button');
+    const isActive = i===activeDay;
+    const isToday = i===todayIndex();
+    btn.className = 'day-chip' + (isActive?' active':'');
+    const noteCount = d.sessions.filter((_,si)=>STORE.notes[`${i}-${si}`]).length;
+    btn.innerHTML = `<span>${d.day}</span>
+      <span class="flex items-center gap-1.5">
+        ${noteCount?`<span class="text-[10px] font-black px-2 py-0.5 rounded" style="background:rgba(245,158,11,.2);color:#fbbf24">📝 ${noteCount}</span>`:''}
+        ${isToday?`<span class="text-[10px] font-black px-2 py-0.5 rounded" style="background:rgba(16,185,129,.25);color:#6ee7b7">اليوم</span>`:''}
+      </span>`;
+    btn.onclick = ()=>{ activeDay=i; renderDay(); renderNav(); syncMobileSelect(); };
+    nav.appendChild(btn);
+  });
+}
+function syncMobileSelect(){document.getElementById('mobile-day-select').value = activeDay;}
+
+/* =========================================================
+   DAY VIEW
+   ========================================================= */
+function renderDay(){
+  const day = SCHEDULE_DATA[activeDay];
+  document.getElementById('day-title').textContent = day.day;
+  document.getElementById('day-count').textContent = day.sessions.length + ' نشاط';
+
+  let totalMin = 0;
+  day.sessions.forEach(s=>totalMin += (timeToMinutes(s.end) - timeToMinutes(s.start)));
+  const h = Math.floor(totalMin/60), m = totalMin%60;
+  document.getElementById('day-hours').textContent = `${h}س ${m>0?m+'د':''}`.trim();
+
+  const timeAxis = document.getElementById('time-axis');
+  const dayGrid = document.getElementById('day-grid');
+  timeAxis.innerHTML = '';
+  dayGrid.innerHTML = '';
+  timeAxis.style.height = TOTAL_HEIGHT+'px';
+  dayGrid.style.height = TOTAL_HEIGHT+'px';
+
+  for(let hour=5; hour<=21; hour++){
+    const topPx = (hour-START_HOUR)*HOUR_HEIGHT;
+    const marker = document.createElement('div');
+    marker.className='absolute w-full flex items-center justify-center -translate-y-1/2 z-10';
+    marker.style.top = topPx+'px';
+    marker.innerHTML = `<span class="time-label">${pad(hour)}:00</span>`;
+    timeAxis.appendChild(marker);
+
+    const line = document.createElement('div');
+    line.className='grid-line absolute inset-x-0 pointer-events-none';
+    line.style.cssText = `top:${topPx}px;border-top:1px solid rgba(148,163,184,.09)`;
+    dayGrid.appendChild(line);
+  }
+
+  const origin = START_HOUR*60;
+  const now = new Date();
+  const nowMin = now.getHours()*60 + now.getMinutes() + now.getSeconds()/60;
+  const today = todayIndex();
+
+  day.sessions.forEach((s, idx)=>{
+    const sMin = timeToMinutes(s.start), eMin = timeToMinutes(s.end);
+    const dur = eMin - sMin;
+    const topPx = ((sMin-origin)/60)*HOUR_HEIGHT;
+    const hPx = Math.max((dur/60)*HOUR_HEIGHT - 6, 34);
+    const isNow = activeDay===today && nowMin>=sMin && nowMin<eMin;
+    const isPast = activeDay===today && nowMin>=eMin;
+    const theme = THEMES[s.theme];
+    const noteKey = `${activeDay}-${idx}`;
+    const hasNote = !!STORE.notes[noteKey];
+
+    const card = document.createElement('div');
+    card.style.top = (topPx+3)+'px';
+    card.style.height = hPx+'px';
+    card.style.background = theme.bg;
+    card.style.border = `1.5px solid ${theme.border}`;
+    card.style.borderRight = `5px solid ${theme.border}`;
+    card.style.opacity = isPast ? '0.55' : '1';
+    card.className = 'session-card absolute inset-x-3 rounded-xl px-3.5 flex flex-col justify-center shadow-lg z-10' + (isNow?' is-now':'');
+    card.title = 'اضغط لإضافة / عرض ملاحظة';
+
+    const timeBadge = `<span class="theme-badge" style="background:${theme.badge};color:${theme.badgeText}">${s.start} - ${s.end}</span>`;
+
+    if(dur<=30){
+      card.style.padding = '6px 12px';
+      card.innerHTML = `<div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2 min-w-0">
+          <span style="color:${theme.border}">${ICONS[s.icon]}</span>
+          <span class="text-[13px] font-extrabold text-white truncate">${s.title}</span>
+          ${hasNote?'<span class="text-[12px]" title="يوجد ملاحظة">📝</span>':''}
+        </div>${timeBadge}</div>`;
+    } else {
+      card.innerHTML = `<div class="flex items-center justify-center gap-2.5 w-full">
+        <span style="color:${theme.border}">${ICONS[s.icon]}</span>
+        <span class="text-[15px] font-extrabold text-white leading-tight truncate">${s.title}</span>
+        ${hasNote?'<span class="text-[13px]" title="يوجد ملاحظة">📝</span>':''}
+      </div>
+      <div class="text-center mt-2">${timeBadge}</div>`;
+    }
+
+    card.onclick = ()=> openNoteModal(activeDay, idx, s);
+    dayGrid.appendChild(card);
+  });
+
+  if(activeDay===today && nowMin>=START_HOUR*60 && nowMin<=END_HOUR*60){
+    const top = ((nowMin-origin)/60)*HOUR_HEIGHT;
+    const line = document.createElement('div');
+    line.className='absolute inset-x-0 z-30 pointer-events-none';
+    line.style.top = top+'px';
+    line.innerHTML = `<div class="relative">
+      <div style="height:2.5px;background:linear-gradient(90deg,transparent,#f43f5e,#f43f5e,transparent);box-shadow:0 0 14px rgba(244,63,94,.75)"></div>
+      <div class="absolute -top-2 right-0 w-4 h-4 rounded-full" style="background:#f43f5e;box-shadow:0 0 14px rgba(244,63,94,.9)"></div>
+    </div>`;
+    dayGrid.appendChild(line);
+  }
+
+  renderDayNote();
+}
+
+/* =========================================================
+   DAY NOTE
+   ========================================================= */
+function renderDayNote(){
+  const txt = STORE.dayNotes[activeDay] || '';
+  const display = document.getElementById('day-note-display');
+  const addBtn = document.getElementById('day-note-add-btn');
+  const editBtn = document.getElementById('day-note-edit-btn');
+  const viewBox = document.getElementById('day-note-view');
+  const editBox = document.getElementById('day-note-edit');
+
+  if(dayNoteEditing){
+    viewBox.classList.add('hidden');
+    editBox.classList.remove('hidden');
+    document.getElementById('day-note-textarea').value = txt;
+    setTimeout(()=>document.getElementById('day-note-textarea').focus(),30);
+    editBtn.classList.add('hidden');
+    return;
+  }
+
+  viewBox.classList.remove('hidden');
+  editBox.classList.add('hidden');
+  editBtn.classList.remove('hidden');
+
+  if(txt){
+    display.textContent = txt;
+    display.classList.remove('empty');
+    addBtn.classList.add('hidden');
+  } else {
+    display.textContent = 'لا توجد ملاحظة لهذا اليوم';
+    display.classList.add('empty');
+    addBtn.classList.remove('hidden');
+  }
+}
+
+function startDayNoteEdit(){
+  dayNoteEditing = true;
+  renderDayNote();
+}
+function saveDayNote(){
+  const val = document.getElementById('day-note-textarea').value.trim();
+  if(val) STORE.dayNotes[activeDay] = val;
+  else delete STORE.dayNotes[activeDay];
+  saveStore(STORE);
+  dayNoteEditing = false;
+  renderDayNote();
+  toast('تم حفظ ملاحظة اليوم ✓');
+}
+function cancelDayNote(){
+  dayNoteEditing = false;
+  renderDayNote();
+}
+
+/* =========================================================
+   NOW ACTIVITY — يدعم وضع النوم بين 21:00 و04:30
+   ========================================================= */
+function updateNow(){
+  const now = new Date();
+  const clock = document.getElementById('live-clock');
+  const dateEl = document.getElementById('live-date');
+  const nowAct = document.getElementById('now-activity');
+  const nowRem = document.getElementById('now-remaining');
+  const nowLabel = document.getElementById('now-label');
+  const dot = document.getElementById('now-dot');
+  const widget = document.getElementById('now-widget');
+
+  clock.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  dateEl.textContent = now.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'});
+
+  const ti = todayIndex();
+  const day = SCHEDULE_DATA[ti];
+  const minNow = now.getHours()*60 + now.getMinutes() + now.getSeconds()/60;
+
+  /* ---------- وضع النوم: 21:00 → 04:30 ---------- */
+  const isSleeping = (minNow >= SLEEP_START_MIN) || (minNow < SLEEP_END_MIN);
+
+  if(isSleeping){
+    // حساب الوقت المتبقي حتى 04:30 من اليوم التالي
+    let remMin;
+    if(minNow >= SLEEP_START_MIN){
+      // مثلاً الساعة 22:00 → متبقي (24:00 - 22:00) + 4:30 = 6:30
+      remMin = (1440 - minNow) + SLEEP_END_MIN;
+    } else {
+      // مثلاً الساعة 02:00 → متبقي 2:30 حتى 4:30
+      remMin = SLEEP_END_MIN - minNow;
+    }
+    const h = Math.floor(remMin/60);
+    const m = Math.floor(remMin%60);
+
+    // رسم القمر في مكان أيقونة النشاط
+    nowAct.innerHTML = `<span class="sleep-moon inline-block">🌙</span> وقت النوم`;
+    nowAct.style.color = '#c4b5fd';
+    nowRem.textContent = `متبقي ${h>0?h+'س ':''}${m}د حتى الاستيقاظ (04:30)`;
+    nowRem.style.color = '#a78bfa';
+    nowLabel.textContent = 'وضع الراحة';
+    nowLabel.style.color = '#a78bfa';
+    dot.style.background = '#a78bfa';
+    dot.classList.remove('animate-pulse');
+    widget.classList.add('sleep');
+
+    // عند الدخول إلى وضع النوم لأول مرة
+    if(!wasSleeping){
+      wasSleeping = true;
+      toast('🌙 موعد النوم — تصبح على خير', 'info');
+    }
+    return;
+  }
+
+  /* ---------- أوقات النشاط العادية ---------- */
+  if(wasSleeping){
+    wasSleeping = false;
+    widget.classList.remove('sleep');
+    toast('☀️ صباح الخير — بدأ وقت الأنشطة', 'success');
+  }
+
+  nowLabel.textContent = 'الآن';
+  nowLabel.style.color = 'var(--text-muted)';
+
+  const current = day.sessions.find(s=>{
+    const sM = timeToMinutes(s.start), eM = timeToMinutes(s.end);
+    return minNow>=sM && minNow<eM;
+  });
+
+  if(current){
+    const eM = timeToMinutes(current.end);
+    const rem = Math.max(0, eM-minNow);
+    const h = Math.floor(rem/60), m = Math.floor(rem%60);
+    nowAct.textContent = current.title;
+    nowAct.style.color = '#6ee7b7';
+    nowRem.textContent = `متبقي ${h>0?h+'س ':''}${m}د`;
+    nowRem.style.color = '#6ee7b7';
+    dot.style.background = '#6ee7b7';
+    dot.classList.add('animate-pulse');
+  } else {
+    const next = day.sessions.find(s=>timeToMinutes(s.start)>minNow);
+    if(next){
+      const sM = timeToMinutes(next.start);
+      const rem = sM-minNow;
+      const h = Math.floor(rem/60), m = Math.floor(rem%60);
+      nowAct.textContent = `التالي: ${next.title}`;
+      nowAct.style.color = '#fcd34d';
+      nowRem.textContent = `بعد ${h>0?h+'س ':''}${m}د`;
+      nowRem.style.color = '#fcd34d';
+      dot.style.background = '#fcd34d';
+      dot.classList.remove('animate-pulse');
+    } else {
+      // لا يوجد نشاط تالٍ في نفس اليوم (فترة فراغ قبل النوم)
+      const remToSleep = SLEEP_START_MIN - minNow;
+      const h = Math.floor(remToSleep/60);
+      const m = Math.floor(remToSleep%60);
+      nowAct.textContent = 'وقت حر';
+      nowAct.style.color = '#94a3b8';
+      nowRem.textContent = remToSleep>0
+        ? `النوم بعد ${h>0?h+'س ':''}${m}د`
+        : '';
+      nowRem.style.color = 'var(--text-muted)';
+      dot.style.background = '#94a3b8';
+      dot.classList.remove('animate-pulse');
+    }
+  }
+
+  if(activeDay===ti && now.getSeconds()===0) renderDay();
+}
+
+/* =========================================================
+   NOTIFICATIONS
+   ========================================================= */
+let notifEnabled = false;
+const notified = new Set();
+
+async function enableNotifications(){
+  if(!('Notification' in window)){toast('الإشعارات غير مدعومة','danger');return;}
+  const perm = await Notification.requestPermission();
+  notifEnabled = perm==='granted';
+  const btn = document.getElementById('btn-enable-notif');
+  if(notifEnabled){
+    btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span class="hidden sm:inline">مفعلة</span>`;
+    btn.classList.add('enabled');
+    btn.style.cssText='';
+    btn.classList.add('notif-btn','enabled');
+    new Notification('تم تفعيل الإشعارات',{body:'سنذكرك قبل 5 دقائق من كل نشاط وعند بدايته.'});
+    toast('تم تفعيل الإشعارات ✓');
+  } else {
+    toast('لم يتم منح الصلاحية','danger');
+  }
+}
+
+function checkNotifications(){
+  if(!notifEnabled || Notification.permission!=='granted') return;
+  const now = new Date();
+  const ti = todayIndex();
+  const day = SCHEDULE_DATA[ti];
+  const minNow = now.getHours()*60 + now.getMinutes();
+
+  day.sessions.forEach((s,i)=>{
+    const sM = timeToMinutes(s.start);
+    const key = `${ti}-${i}-${now.toDateString()}`;
+    if(minNow===sM-5 && !notified.has(key+'-w')){
+      notified.add(key+'-w');
+      new Notification('⏰ اقتراب نشاط',{body:`بعد 5 دقائق: ${s.title} (${s.start})`});
+    }
+    if(minNow===sM && !notified.has(key+'-s')){
+      notified.add(key+'-s');
+      new Notification('▶ بدء النشاط',{body:`الآن: ${s.title} — ${s.start} إلى ${s.end}`});
+    }
+  });
+}
+
+/* =========================================================
+   SESSION NOTE MODAL
+   ========================================================= */
+function openNoteModal(dayIdx, sessIdx, session){
+  noteCtx = { dayIdx, sessIdx, mode:'view' };
+  document.getElementById('modal-title').textContent = session.title;
+  const theme = THEMES[session.theme];
+  document.getElementById('modal-sub').innerHTML =
+    `<span style="color:${theme.border}">${SCHEDULE_DATA[dayIdx].day}</span> • <span class="font-time">${session.start} - ${session.end}</span>`;
+  document.getElementById('modal-icon-wrap').innerHTML = ICONS[session.icon];
+  document.getElementById('modal-icon-wrap').style.background = theme.badge;
+  document.getElementById('modal-icon-wrap').style.color = theme.border;
+
+  setModalMode('view');
+  document.getElementById('modal-note').classList.remove('hidden');
+  document.getElementById('modal-note').classList.add('flex');
+}
+
+function closeNoteModal(){
+  document.getElementById('modal-note').classList.add('hidden');
+  document.getElementById('modal-note').classList.remove('flex');
+  noteCtx = { dayIdx:null, sessIdx:null, mode:'view' };
+}
+
+function setModalMode(mode){
+  noteCtx.mode = mode;
+  const viewBox = document.getElementById('modal-view-mode');
+  const editBox = document.getElementById('modal-edit-mode');
+  const key = `${noteCtx.dayIdx}-${noteCtx.sessIdx}`;
+  const current = STORE.notes[key] || '';
+
+  if(mode==='view'){
+    viewBox.classList.remove('hidden');
+    editBox.classList.add('hidden');
+
+    const display = document.getElementById('modal-note-display');
+    const delBtn = document.getElementById('modal-delete-btn');
+    const editLabel = document.getElementById('modal-edit-label');
+
+    if(current){
+      display.textContent = current;
+      display.classList.remove('empty');
+      editLabel.textContent = 'تعديل الملاحظة';
+      delBtn.classList.remove('hidden');
+    } else {
+      display.textContent = 'لا توجد ملاحظة بعد — اضغط "إضافة" لكتابة واحدة.';
+      display.classList.add('empty');
+      editLabel.textContent = 'إضافة ملاحظة';
+      delBtn.classList.add('hidden');
+    }
+  } else {
+    viewBox.classList.add('hidden');
+    editBox.classList.remove('hidden');
+    const ta = document.getElementById('modal-textarea');
+    ta.value = current;
+    updateCharCount();
+    setTimeout(()=>ta.focus(),40);
+  }
+}
+
+function updateCharCount(){
+  const ta = document.getElementById('modal-textarea');
+  document.getElementById('modal-char-count').textContent = `${ta.value.length} / 1000`;
+}
+
+function saveSessionNote(){
+  const val = document.getElementById('modal-textarea').value.trim();
+  const key = `${noteCtx.dayIdx}-${noteCtx.sessIdx}`;
+  if(val) STORE.notes[key] = val;
+  else delete STORE.notes[key];
+  saveStore(STORE);
+  setModalMode('view');
+  renderDay();
+  renderNav();
+  toast('تم حفظ الملاحظة ✓');
+}
+
+function deleteSessionNote(){
+  const key = `${noteCtx.dayIdx}-${noteCtx.sessIdx}`;
+  if(!STORE.notes[key]) return;
+  if(!confirm('هل تريد حذف هذه الملاحظة؟')) return;
+  delete STORE.notes[key];
+  saveStore(STORE);
+  setModalMode('view');
+  renderDay();
+  renderNav();
+  toast('تم حذف الملاحظة','info');
+}
+
+/* =========================================================
+   CALENDAR
+   ========================================================= */
+function monthName(y,m){
+  return new Date(y,m,1).toLocaleDateString('ar-EG',{month:'long',year:'numeric'});
+}
+
+function renderCalendar(){
+  document.getElementById('cal-month').textContent = monthName(calYear,calMonth);
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  const first = new Date(calYear,calMonth,1);
+  const startDay = first.getDay();
+  const daysInMonth = new Date(calYear,calMonth+1,0).getDate();
+  const today = new Date();
+
+  for(let i=0;i<startDay;i++){
+    const e = document.createElement('div');
+    e.className = 'cal-cell is-empty';
+    grid.appendChild(e);
+  }
+
+  for(let d=1; d<=daysInMonth; d++){
+    const date = new Date(calYear,calMonth,d);
+    const jsDay = date.getDay();
+    const schedIdx = jsDay===0?6:jsDay-1;
+    const dayData = SCHEDULE_DATA[schedIdx];
+    const total = dayData.sessions.length;
+    const note = STORE.dayNotes[schedIdx] || '';
+    const isToday = date.toDateString()===today.toDateString();
+
+    const cell = document.createElement('button');
+    cell.className = 'cal-cell' + (isToday?' is-today':'');
+    cell.innerHTML = `
+      <div class="flex items-center justify-between w-full">
+        <span class="font-time text-sm ${isToday?'text-indigo-200':'text-white'}">${d}</span>
+        ${total?`<span class="text-[10px] font-black px-2 py-0.5 rounded" style="background:rgba(99,102,241,.25);color:#c7d2fe">${total}</span>`:''}
+      </div>
+      <div class="flex gap-1 mt-2 flex-wrap">
+        ${dayData.sessions.slice(0,8).map(s=>`<span class="presence-dot" style="background:${THEMES[s.theme].border}"></span>`).join('')}
+      </div>
+      <div class="text-[10px] mt-auto truncate" style="color:var(--text-muted)">${note?'📝 '+note.slice(0,10):''}</div>`;
+    cell.onclick = ()=> showCalDetail(d, schedIdx, dayData);
+    grid.appendChild(cell);
+  }
+}
+
+function showCalDetail(dayNum, schedIdx, dayData){
+  const detail = document.getElementById('cal-detail');
+  detail.classList.remove('hidden');
+  const note = STORE.dayNotes[schedIdx] || '';
+  detail.innerHTML = `
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h3 class="font-black text-white text-xl">${dayData.day} ${dayNum}</h3>
+        <p class="text-sm font-semibold" style="color:var(--text-muted)">${dayData.sessions.length} نشاط</p>
+      </div>
+      <button onclick="document.getElementById('cal-detail').classList.add('hidden')" class="w-9 h-9 rounded-lg flex items-center justify-center transition hover:bg-white/10" style="color:var(--text-muted)">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    ${note?`<div class="note-display mb-4" style="font-size:14px;padding:12px 14px">📝 ${note}</div>`:''}
+    <div class="max-h-72 overflow-y-auto space-y-1.5 pr-1">
+      ${dayData.sessions.map((s,i)=>{
+        const n = STORE.notes[`${schedIdx}-${i}`];
+        const theme = THEMES[s.theme];
+        return `<div class="flex items-start justify-between gap-3 rounded-lg px-3 py-2.5" style="background:rgba(148,163,184,.04);border-right:3px solid ${theme.border}">
+          <div class="flex items-center gap-2 min-w-0">
+            <span style="color:${theme.border}">${ICONS[s.icon]}</span>
+            <div class="min-w-0">
+              <div class="text-sm font-bold text-white truncate">${s.title}</div>
+              ${n?`<div class="text-[11px] mt-0.5 truncate" style="color:#fcd34d">📝 ${n}</div>`:''}
+            </div>
+          </div>
+          <span class="font-time text-xs shrink-0" style="color:var(--text-muted)">${s.start}-${s.end}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+document.addEventListener('DOMContentLoaded', ()=>{
+  const sel = document.getElementById('mobile-day-select');
+  SCHEDULE_DATA.forEach((d,i)=>{
+    const o = document.createElement('option');
+    o.value = i; o.textContent = d.day; sel.appendChild(o);
+  });
+  sel.addEventListener('change', e=>{ activeDay=+e.target.value; renderDay(); renderNav(); });
+
+  document.getElementById('day-note-edit-btn').onclick = startDayNoteEdit;
+  document.getElementById('day-note-add-btn').onclick = startDayNoteEdit;
+  document.getElementById('day-note-save').onclick = saveDayNote;
+  document.getElementById('day-note-cancel').onclick = cancelDayNote;
+
+  document.getElementById('modal-edit-btn').onclick = ()=> setModalMode('edit');
+  document.getElementById('modal-cancel-btn').onclick = ()=> setModalMode('view');
+  document.getElementById('modal-save-btn').onclick = saveSessionNote;
+  document.getElementById('modal-delete-btn').onclick = deleteSessionNote;
+  document.getElementById('modal-textarea').addEventListener('input', updateCharCount);
+  document.getElementById('modal-note').addEventListener('click', e=>{
+    if(e.target.id==='modal-note') closeNoteModal();
+  });
+
+  document.getElementById('btn-enable-notif').onclick = enableNotifications;
+
+  document.getElementById('btn-calendar').onclick = ()=>{
+    calendarMode = !calendarMode;
+    document.getElementById('view-day').classList.toggle('hidden', calendarMode);
+    document.getElementById('view-calendar').classList.toggle('hidden', !calendarMode);
+    const btn = document.getElementById('btn-calendar');
+    if(calendarMode){
+      btn.style.background='linear-gradient(135deg,#6366f1,#8b5cf6)';
+      btn.style.color='#fff';
+      btn.style.border='none';
+      renderCalendar();
+    } else {
+      btn.style.background='';
+      btn.style.color='';
+      btn.style.border='';
+    }
+  };
+  document.getElementById('cal-prev').onclick = ()=>{ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); };
+  document.getElementById('cal-next').onclick = ()=>{ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); };
+
+  document.addEventListener('keydown', e=>{
+    if(e.key==='Escape'){
+      if(!document.getElementById('modal-note').classList.contains('hidden')) closeNoteModal();
+      if(dayNoteEditing) cancelDayNote();
+    }
+  });
+
+  renderNav();
+  renderDay();
+  syncMobileSelect();
+  updateNow();
+  setInterval(updateNow, 1000);
+  setInterval(checkNotifications, 15000);
+});
+</script>
+</body>
+</html>
