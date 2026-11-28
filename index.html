@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --hour-height: 88px;
+    --hour-height: 64px;
     --bg:#060911;
     --surface:#0d1321;
     --surface-2:#131a2c;
@@ -42,53 +42,23 @@
   ::-webkit-scrollbar-thumb{background:rgba(148,163,184,0.22);border-radius:10px}
   ::-webkit-scrollbar-thumb:hover{background:rgba(148,163,184,0.4)}
 
-  .glass{
-    background:rgba(19,26,44,0.7);
-    backdrop-filter:blur(16px);
-    -webkit-backdrop-filter:blur(16px);
-    border:1px solid var(--border);
-  }
-  .glass.sleep{
-    background:rgba(76,29,149,0.18);
-    border-color:rgba(167,139,250,0.35);
-    box-shadow:0 0 32px -8px rgba(139,92,246,0.35);
-  }
-  .card-surface{
-    background:var(--surface);
-    border:1px solid var(--border);
-  }
-  .session-card{
-    transition:transform .18s cubic-bezier(.4,0,.2,1), box-shadow .18s, filter .18s;
-    cursor:pointer;
-  }
-  .session-card:hover{
-    transform:translateY(-2px) scale(1.012);
-    z-index:25;
-    box-shadow:0 12px 32px -8px rgba(0,0,0,0.65);
-    filter:brightness(1.1);
-  }
-  .session-card.is-now{
-    animation:nowPulse 2.4s ease-in-out infinite;
-  }
-  @keyframes nowPulse{
-    0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0.5), 0 8px 24px -4px rgba(0,0,0,0.5)}
-    50%{box-shadow:0 0 0 7px rgba(16,185,129,0), 0 8px 24px -4px rgba(0,0,0,0.5)}
-  }
+  .glass{background:rgba(19,26,44,0.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border)}
+  .glass.sleep{background:rgba(76,29,149,0.18);border-color:rgba(167,139,250,0.35);box-shadow:0 0 32px -8px rgba(139,92,246,0.35)}
+  .card-surface{background:var(--surface);border:1px solid var(--border)}
+
+  .session-card{transition:transform .18s cubic-bezier(.4,0,.2,1), box-shadow .18s, filter .18s;cursor:pointer}
+  .session-card:hover{transform:translateY(-2px) scale(1.012);z-index:25;box-shadow:0 12px 32px -8px rgba(0,0,0,0.65);filter:brightness(1.1)}
+  .session-card.is-now{animation:nowPulse 2.4s ease-in-out infinite}
+  @keyframes nowPulse{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0.5), 0 8px 24px -4px rgba(0,0,0,0.5)}50%{box-shadow:0 0 0 7px rgba(16,185,129,0), 0 8px 24px -4px rgba(0,0,0,0.5)}}
 
   .fade-in{animation:fadeIn .3s ease}
   @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-
   .modal-enter{animation:modalIn .22s cubic-bezier(.4,0,.2,1)}
   @keyframes modalIn{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:none}}
-
   .toast-enter{animation:toastIn .3s cubic-bezier(.4,0,.2,1)}
   @keyframes toastIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:none}}
 
-  .btn{
-    display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    padding:11px 20px;border-radius:12px;font-weight:700;font-size:14px;
-    cursor:pointer;transition:all .15s;border:none;font-family:inherit;
-  }
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s;border:none;font-family:inherit}
   .btn:active{transform:scale(.96)}
   .btn-primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;box-shadow:0 4px 16px -4px rgba(99,102,241,.5)}
   .btn-primary:hover{box-shadow:0 6px 20px -4px rgba(99,102,241,.7);filter:brightness(1.08)}
@@ -99,96 +69,80 @@
   .btn-danger{background:rgba(239,68,68,.12);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
   .btn-danger:hover{background:rgba(239,68,68,.2)}
 
-  .note-textarea{
-    width:100%;background:rgba(6,9,17,.6);border:1.5px solid var(--border-strong);
-    border-radius:14px;padding:14px 16px;font-family:'Cairo',sans-serif;
-    font-size:15px;color:var(--text);resize:vertical;min-height:120px;
-    transition:border-color .15s, box-shadow .15s;outline:none;line-height:1.8;
-  }
+  .note-textarea{width:100%;background:rgba(6,9,17,.6);border:1.5px solid var(--border-strong);border-radius:14px;padding:14px 16px;font-family:'Cairo',sans-serif;font-size:15px;color:var(--text);resize:vertical;min-height:120px;transition:border-color .15s, box-shadow .15s;outline:none;line-height:1.8}
   .note-textarea:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(99,102,241,.15)}
   .note-textarea::placeholder{color:var(--text-muted)}
 
-  .note-display{
-    background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(139,92,246,.05));
-    border:1px solid rgba(99,102,241,.25);
-    border-radius:14px;padding:16px 18px;
-    line-height:1.85;font-size:15px;color:#dbe4f0;
-    white-space:pre-wrap;word-break:break-word;
-    max-height:280px;overflow-y:auto;
-  }
-  .note-display.empty{
-    background:rgba(148,163,184,.03);
-    border:1.5px dashed rgba(148,163,184,.2);
-    color:var(--text-muted);text-align:center;padding:28px 16px;
-    font-style:italic;font-size:14px;
-  }
+  .note-display{background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(139,92,246,.05));border:1px solid rgba(99,102,241,.25);border-radius:14px;padding:16px 18px;line-height:1.85;font-size:15px;color:#dbe4f0;white-space:pre-wrap;word-break:break-word;max-height:280px;overflow-y:auto}
+  .note-display.empty{background:rgba(148,163,184,.03);border:1.5px dashed rgba(148,163,184,.2);color:var(--text-muted);text-align:center;padding:28px 16px;font-style:italic;font-size:14px}
 
-  .day-chip{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:14px 16px;border-radius:14px;font-weight:800;font-size:15px;
-    cursor:pointer;transition:all .15s;border:1.5px solid transparent;
-    width:100%;text-align:right;font-family:inherit;color:var(--text);
-    background:rgba(148,163,184,.04);
-  }
+  .day-chip{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:14px;font-weight:800;font-size:14px;cursor:pointer;transition:all .15s;border:1.5px solid transparent;width:100%;text-align:right;font-family:inherit;color:var(--text);background:rgba(148,163,184,.04)}
   .day-chip:hover{background:rgba(148,163,184,.09);border-color:var(--border-strong)}
-  .day-chip.active{
-    background:linear-gradient(135deg,rgba(99,102,241,.25),rgba(139,92,246,.15));
-    border-color:rgba(99,102,241,.5);
-    box-shadow:0 4px 20px -6px rgba(99,102,241,.5), inset 0 1px 0 rgba(255,255,255,.08);
-  }
+  .day-chip.active{background:linear-gradient(135deg,rgba(99,102,241,.25),rgba(139,92,246,.15));border-color:rgba(99,102,241,.5);box-shadow:0 4px 20px -6px rgba(99,102,241,.5), inset 0 1px 0 rgba(255,255,255,.08)}
 
-  .theme-badge{
-    display:inline-flex;align-items:center;padding:4px 11px;border-radius:8px;
-    font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:800;letter-spacing:.03em;
-    white-space:nowrap;
-  }
+  .theme-badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:800;letter-spacing:.03em;white-space:nowrap}
 
-  .stat-pill{
-    display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;
-    font-size:13px;font-weight:800;background:rgba(148,163,184,.06);
-    border:1px solid var(--border);color:#b8c2d4;
-  }
+  .stat-pill{display:flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:800;background:rgba(148,163,184,.06);border:1px solid var(--border);color:#b8c2d4}
 
-  .time-label{
-    display:inline-block;padding:5px 12px;border-radius:10px;
-    font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:800;
-    background:linear-gradient(135deg,rgba(19,26,44,.98),rgba(13,19,33,.98));
-    color:#e2e8f0;
-    border:1.5px solid rgba(148,163,184,.28);
-    box-shadow:0 2px 10px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
-    letter-spacing:.03em;direction:ltr;
-  }
-
-  .cal-cell{
-    aspect-ratio:1;border-radius:10px;padding:7px;border:1px solid var(--border);
-    background:rgba(13,19,33,.6);cursor:pointer;transition:all .15s;
-    display:flex;flex-direction:column;min-height:88px;position:relative;
-    font-family:inherit;color:var(--text);text-align:right;
-  }
-  .cal-cell:hover{border-color:rgba(99,102,241,.6);background:rgba(99,102,241,.08);transform:translateY(-1px)}
-  .cal-cell.is-today{
-    background:linear-gradient(135deg,rgba(99,102,241,.25),rgba(139,92,246,.12));
-    border-color:rgba(99,102,241,.6);
-  }
-  .cal-cell.is-empty{background:transparent;border:1px dashed rgba(148,163,184,.08);cursor:default;pointer-events:none}
-
-  .presence-dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .time-label{display:inline-block;padding:3px 10px;border-radius:9px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;background:linear-gradient(135deg,rgba(19,26,44,.98),rgba(13,19,33,.98));color:#e2e8f0;border:1.5px solid rgba(148,163,184,.28);box-shadow:0 2px 10px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);letter-spacing:.03em;direction:ltr}
 
   .notif-btn.enabled{background:rgba(16,185,129,.15);color:#6ee7b7;border:1px solid rgba(16,185,129,.4);cursor:default}
 
   .sleep-moon{animation:float 3s ease-in-out infinite}
   @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
 
+  /* ===== Week Grid ===== */
+  .week-grid{display:grid;grid-template-columns:80px repeat(7,1fr)}
+  .week-head-cell{padding:10px 6px;text-align:center;font-size:12px;font-weight:800;border-left:1px solid var(--border);position:relative;background:rgba(99,102,241,.06)}
+  .week-head-cell:last-child{border-left:none}
+  .week-head-cell.today{background:rgba(99,102,241,.18)}
+  .week-head-cell .date{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-muted);margin-top:3px}
+  .week-time-cell{position:relative;border-left:1px solid var(--border);background:rgba(6,9,17,.5)}
+  .week-col{position:relative;border-left:1px solid var(--border)}
+  .week-col:last-child{border-left:none}
+  .week-col.today{background:rgba(99,102,241,.05)}
+  .week-session{position:absolute;left:3px;right:3px;border-radius:5px;padding:3px 5px;overflow:hidden;cursor:pointer;color:#fff;text-align:right;font-family:inherit;border:none;transition:transform .15s, box-shadow .15s, filter .15s;display:flex;align-items:center;gap:4px}
+  .week-session:hover{transform:scale(1.04);z-index:10;box-shadow:0 8px 20px -6px rgba(0,0,0,.7);filter:brightness(1.15)}
+  .week-session-title{font-size:9.5px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2;flex-grow:1}
+  .week-session-time{font-family:'JetBrains Mono',monospace;font-size:8px;direction:ltr;opacity:.8;white-space:nowrap}
+
+  /* ===== Edit view grid ===== */
+  .edit-grid-wrapper{position:relative;display:flex;border:1px solid var(--border);border-radius:16px;overflow:hidden;background:rgba(13,19,33,.4)}
+  .edit-time-axis{width:70px;flex:0 0 70px;position:relative;user-select:none;background:rgba(6,9,17,.5);border-left:1px solid var(--border)}
+  .edit-time-axis .mark{position:absolute;width:100%;display:flex;justify-content:center;transform:translateY(-50%);z-index:2}
+  .edit-canvas{flex:1;position:relative;background:rgba(13,19,33,.4);touch-action:none}
+
+  .edit-session{position:absolute;left:6px;right:6px;border-radius:10px;padding:6px 10px;color:#fff;cursor:grab;user-select:none;overflow:hidden;transition:box-shadow .15s, filter .15s;box-shadow:0 3px 12px -4px rgba(0,0,0,.5);touch-action:none}
+  .edit-session:hover{box-shadow:0 6px 20px -6px rgba(0,0,0,.7);filter:brightness(1.1)}
+  .edit-session.dragging{cursor:grabbing;z-index:50;box-shadow:0 18px 40px -10px rgba(0,0,0,.9);filter:brightness(1.15);transform:scale(1.02)}
+  .edit-session.resizing{z-index:50;box-shadow:0 12px 30px -8px rgba(0,0,0,.8)}
+  .edit-session .handle-resize{position:absolute;left:0;right:0;bottom:0;height:10px;cursor:ns-resize;display:flex;justify-content:center;align-items:flex-end;padding-bottom:2px}
+  .edit-session .handle-resize::after{content:'';display:block;width:30px;height:3px;border-radius:2px;background:rgba(255,255,255,.55)}
+  .edit-session .sess-delete{position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:5px;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity .15s}
+  .edit-session:hover .sess-delete{opacity:1}
+  .edit-session .sess-delete:hover{background:rgba(239,68,68,.7)}
+  .edit-session .sess-title{font-size:12px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.25;padding-left:22px}
+  .edit-session .sess-time{font-family:'JetBrains Mono',monospace;font-size:9.5px;margin-top:2px;direction:ltr;opacity:.85}
+  .edit-session .sess-icon{display:inline-flex;vertical-align:middle;margin-left:3px}
+  .edit-session .sess-icon svg{width:13px;height:13px}
+
+  .snap-line{position:absolute;left:0;right:0;height:0;border-top:2px dashed rgba(99,102,241,.8);z-index:40;pointer-events:none;display:none}
+  .snap-line.show{display:block}
+  .drag-hint{position:absolute;top:6px;right:8px;padding:4px 9px;border-radius:7px;background:rgba(16,185,129,.92);color:#fff;font-size:11px;font-weight:800;z-index:45;pointer-events:none;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+  .drag-hint.show{display:block}
+
+  .form-input{width:100%;min-width:0;padding:8px 10px;border-radius:10px;background:rgba(6,9,17,.6);border:1.5px solid var(--border-strong);color:var(--text);font-size:13px;outline:none;font-family:inherit;transition:border-color .15s}
+  .form-input:focus{border-color:var(--primary)}
+  .scope-btn{padding:9px 18px;border-radius:999px;font-size:13px;font-weight:800;cursor:pointer;background:rgba(148,163,184,.06);border:1.5px solid var(--border-strong);color:#b8c2d4;transition:all .15s;font-family:inherit}
+  .scope-btn.active{background:linear-gradient(135deg,#6366f1,#8b5cf6);border-color:transparent;color:#fff;box-shadow:0 4px 16px -4px rgba(99,102,241,.5)}
+  .day-tab{padding:8px 14px;border-radius:999px;font-size:12.5px;font-weight:800;cursor:pointer;background:rgba(148,163,184,.06);border:1.5px solid var(--border-strong);color:#b8c2d4;transition:all .15s;font-family:inherit}
+  .day-tab.active{background:rgba(99,102,241,.25);border-color:rgba(99,102,241,.5);color:#fff}
+
   @media print{
     @page{size:A4 landscape;margin:5mm}
     body{background:#fff!important;color:#0f172a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .no-print{display:none!important}
     .print-area{overflow:visible!important;box-shadow:none!important;border:1px solid #94a3b8!important;background:#fff!important}
-    .day-col{background:#fff!important;border-color:#cbd5e1!important}
-    .time-axis-col{background:#f1f5f9!important;border-color:#cbd5e1!important}
-    .grid-line{border-color:#e2e8f0!important}
-    .session-card{box-shadow:none!important;border-width:1.5px!important}
-    .time-label{color:#0f172a!important;background:#f1f5f9!important;border-color:#cbd5e1!important}
   }
 </style>
 </head>
@@ -197,8 +151,6 @@
 <!-- ============ HEADER ============ -->
 <header class="sticky top-0 z-40 no-print" style="background:rgba(6,9,17,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)">
   <div class="max-w-[1720px] mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
-
-    <!-- Logo -->
     <div class="flex items-center gap-3">
       <div class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);box-shadow:0 8px 24px -6px rgba(99,102,241,.6)">
         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2.5"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -209,7 +161,6 @@
       </div>
     </div>
 
-    <!-- Now Widget -->
     <div id="now-widget" class="flex items-center gap-4 px-5 py-2.5 rounded-2xl glass min-w-[380px] transition-all duration-500">
       <div class="text-center pl-4" style="border-left:1px solid var(--border)">
         <div id="live-clock" class="font-time text-2xl text-indigo-300 tracking-tight">--:--:--</div>
@@ -225,11 +176,10 @@
       </div>
     </div>
 
-    <!-- Actions -->
     <div class="flex items-center gap-2">
-      <button id="btn-calendar" class="btn btn-ghost">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        <span class="hidden sm:inline">التقويم</span>
+      <button id="btn-sound" class="btn btn-ghost" title="تفعيل/إيقاف الأصوات">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        <span class="hidden sm:inline" id="sound-label">الأصوات</span>
       </button>
       <button id="btn-enable-notif" class="btn notif-btn" style="background:rgba(245,158,11,.12);color:#fcd34d;border:1px solid rgba(245,158,11,.35)">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
@@ -241,20 +191,27 @@
       </button>
     </div>
   </div>
+
+  <div class="max-w-[1720px] mx-auto px-4 sm:px-6 pb-3 flex flex-wrap items-center gap-2">
+    <button class="view-tab btn btn-ghost active" data-view="day">اليوم</button>
+    <button class="view-tab btn btn-ghost" data-view="week">الأسبوع</button>
+    <button class="view-tab btn btn-ghost" data-view="edit">تعديل الجدول</button>
+    <div id="now-badge" class="ml-auto text-[12px] font-bold px-3 py-1.5 rounded-lg" style="background:rgba(16,185,129,.12);color:#6ee7b7;border:1px solid rgba(16,185,129,.3)">جاهز</div>
+  </div>
 </header>
 
 <!-- ============ MAIN ============ -->
-<div class="flex-grow w-full max-w-[1720px] mx-auto flex gap-5 p-4 sm:p-6 no-print">
+<div class="flex-grow w-full max-w-[1720px] mx-auto flex gap-5 p-3 sm:p-4 no-print">
 
   <!-- SIDEBAR -->
-  <aside class="w-72 shrink-0 hidden md:flex flex-col gap-4">
+  <aside class="w-72 shrink-0 hidden md:flex flex-col gap-3">
     <div class="rounded-2xl card-surface p-3 shadow-xl">
       <div class="text-[11px] font-black uppercase tracking-widest px-2 mb-2" style="color:var(--text-muted)">أيام الأسبوع</div>
       <nav id="days-nav" class="flex flex-col gap-1.5"></nav>
     </div>
 
     <div class="rounded-2xl card-surface overflow-hidden shadow-xl">
-      <div class="px-4 py-3 flex items-center justify-between" style="border-bottom:1px solid var(--border);background:rgba(99,102,241,.06)">
+      <div class="px-4 py-2.5 flex items-center justify-between" style="border-bottom:1px solid var(--border);background:rgba(99,102,241,.06)">
         <div class="flex items-center gap-2">
           <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           <span class="text-sm font-extrabold text-white">ملاحظة اليوم</span>
@@ -263,24 +220,22 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         </button>
       </div>
-
       <div class="p-3">
         <div id="day-note-view">
-          <div id="day-note-display" class="note-display empty" style="min-height:auto;padding:16px;font-size:14px">لا توجد ملاحظة لهذا اليوم</div>
-          <button id="day-note-add-btn" class="btn btn-ghost w-full mt-2" style="font-size:13px;padding:9px">
+          <div id="day-note-display" class="note-display empty" style="min-height:auto;padding:14px;font-size:13px">لا توجد ملاحظة لهذا اليوم</div>
+          <button id="day-note-add-btn" class="btn btn-ghost w-full mt-2" style="font-size:13px;padding:8px">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             إضافة ملاحظة
           </button>
         </div>
-
         <div id="day-note-edit" class="hidden">
-          <textarea id="day-note-textarea" class="note-textarea" style="min-height:110px;font-size:14px" placeholder="اكتب ملاحظتك..."></textarea>
+          <textarea id="day-note-textarea" class="note-textarea" style="min-height:100px;font-size:13px" placeholder="اكتب ملاحظتك..."></textarea>
           <div class="flex gap-2 mt-2">
-            <button id="day-note-save" class="btn btn-success flex-grow" style="padding:9px;font-size:13px">
+            <button id="day-note-save" class="btn btn-success flex-grow" style="padding:8px;font-size:13px">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
               حفظ
             </button>
-            <button id="day-note-cancel" class="btn btn-ghost" style="padding:9px 14px;font-size:13px">إلغاء</button>
+            <button id="day-note-cancel" class="btn btn-ghost" style="padding:8px 12px;font-size:13px">إلغاء</button>
           </div>
         </div>
       </div>
@@ -290,16 +245,17 @@
   <!-- CONTENT -->
   <main class="flex-grow min-w-0">
 
-    <div class="md:hidden mb-4">
-      <select id="mobile-day-select" class="w-full px-4 py-3 rounded-xl font-bold text-base outline-none" style="background:var(--surface-2);border:1.5px solid var(--border-strong);color:var(--text)"></select>
+    <div class="md:hidden mb-3">
+      <select id="mobile-day-select" class="w-full px-4 py-2.5 rounded-xl font-bold text-base outline-none" style="background:var(--surface-2);border:1.5px solid var(--border-strong);color:var(--text)"></select>
     </div>
 
+    <!-- DAY VIEW -->
     <section id="view-day" class="fade-in">
-      <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+      <div class="flex items-center justify-between mb-3 flex-wrap gap-3">
         <div class="flex items-center gap-3">
-          <div class="w-2 h-12 rounded-full" style="background:linear-gradient(180deg,#6366f1,#8b5cf6)"></div>
+          <div class="w-2 h-10 rounded-full" style="background:linear-gradient(180deg,#6366f1,#8b5cf6)"></div>
           <div>
-            <h2 id="day-title" class="text-3xl font-black text-white">—</h2>
+            <h2 id="day-title" class="text-2xl font-black text-white">—</h2>
             <p id="day-subtitle" class="text-sm font-semibold mt-0.5" style="color:var(--text-muted)">—</p>
           </div>
         </div>
@@ -317,45 +273,97 @@
 
       <div class="print-area rounded-2xl overflow-x-auto shadow-2xl card-surface">
         <div class="min-w-[900px] flex">
-          <div id="time-axis" class="time-axis-col w-[118px] shrink-0 relative select-none" style="border-left:1px solid var(--border);background:linear-gradient(180deg,rgba(6,9,17,.7),rgba(6,9,17,.5))"></div>
-          <div id="day-grid" class="day-col flex-grow relative" style="background:rgba(13,19,33,.4)"></div>
+          <div id="time-axis" class="w-[100px] shrink-0 relative select-none" style="border-left:1px solid var(--border);background:linear-gradient(180deg,rgba(6,9,17,.7),rgba(6,9,17,.5))"></div>
+          <div id="day-grid" class="flex-grow relative" style="background:rgba(13,19,33,.4)"></div>
         </div>
       </div>
     </section>
 
-    <section id="view-calendar" class="hidden fade-in">
-      <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
+    <!-- WEEK VIEW -->
+    <section id="view-week" class="hidden fade-in">
+      <div class="flex items-center justify-between mb-3 flex-wrap gap-3">
         <div class="flex items-center gap-3">
-          <div class="w-2 h-12 rounded-full" style="background:linear-gradient(180deg,#10b981,#059669)"></div>
+          <div class="w-2 h-10 rounded-full" style="background:linear-gradient(180deg,#10b981,#059669)"></div>
           <div>
-            <h2 class="text-3xl font-black text-white">التقويم الشهري</h2>
-            <p class="text-sm font-semibold mt-0.5" style="color:var(--text-muted)">نظرة عامة على أنشطتك</p>
+            <h2 class="text-2xl font-black text-white">الأسبوع</h2>
+            <p id="week-subtitle" class="text-sm font-semibold mt-0.5" style="color:var(--text-muted)">—</p>
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <button id="cal-prev" class="w-11 h-11 rounded-xl flex items-center justify-center transition hover:bg-white/10" style="background:var(--surface-2);border:1px solid var(--border-strong);color:var(--text)">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-          </button>
-          <span id="cal-month" class="text-base font-extrabold text-white min-w-[170px] text-center"></span>
-          <button id="cal-next" class="w-11 h-11 rounded-xl flex items-center justify-center transition hover:bg-white/10" style="background:var(--surface-2);border:1px solid var(--border-strong);color:var(--text)">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
+          <button id="week-prev" class="btn btn-ghost" style="padding:8px 14px;font-size:13px">‹ السابق</button>
+          <button id="week-today" class="btn btn-primary" style="padding:8px 14px;font-size:13px">هذا الأسبوع</button>
+          <button id="week-next" class="btn btn-ghost" style="padding:8px 14px;font-size:13px">التالي ›</button>
         </div>
       </div>
 
-      <div class="grid grid-cols-7 gap-2 mb-2">
-        <div class="text-center text-xs font-black uppercase tracking-wider py-2" style="color:var(--text-muted)">أحد</div>
-        <div class="text-center text-xs font-black uppercase tracking-wider py-2" style="color:var(--text-muted)">إثنين</div>
-        <div class="text-center text-xs font-black uppercase tracking-wider py-2" style="color:var(--text-muted)">ثلاثاء</div>
-        <div class="text-center text-xs font-black uppercase tracking-wider py-2" style="color:var(--text-muted)">أربعاء</div>
-        <div class="text-center text-xs font-black uppercase tracking-wider py-2" style="color:var(--text-muted)">خميس</div>
-        <div class="text-center text-xs font-black uppercase tracking-wider py-2" style="color:var(--text-muted)">جمعة</div>
-        <div class="text-center text-xs font-black uppercase tracking-wider py-2" style="color:var(--text-muted)">سبت</div>
+      <div class="rounded-2xl overflow-x-auto shadow-2xl" style="border:1px solid var(--border)">
+        <div style="min-width:1000px">
+          <div id="week-header" class="week-grid" style="border-bottom:1px solid var(--border)"></div>
+          <div class="week-grid" id="week-body" style="border-top:none"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDIT VIEW -->
+    <section id="view-edit" class="hidden fade-in">
+      <div class="flex items-center justify-between mb-3 flex-wrap gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-2 h-10 rounded-full" style="background:linear-gradient(180deg,#8b5cf6,#6366f1)"></div>
+          <div>
+            <h2 class="text-2xl font-black text-white">تعديل الجدول</h2>
+            <p class="text-sm font-semibold mt-0.5" style="color:var(--text-muted)">اسحب الجلسات لتغيير وقتها — اسحب الحافة السفلية لتغيير المدة</p>
+          </div>
+        </div>
       </div>
 
-      <div id="cal-grid" class="grid grid-cols-7 gap-2"></div>
+      <div class="rounded-2xl card-surface p-3 mb-3 shadow-xl">
+        <div class="flex flex-wrap items-center gap-4">
+          <div>
+            <div class="text-[11px] font-black uppercase tracking-widest mb-1.5" style="color:var(--text-muted)">نطاق التعديل</div>
+            <div class="flex gap-2">
+              <button class="scope-btn active" data-scope="permanent">دائم</button>
+              <button class="scope-btn" data-scope="week">هذا الأسبوع فقط</button>
+            </div>
+          </div>
+          <div class="flex-grow"></div>
+          <div>
+            <div class="text-[11px] font-black uppercase tracking-widest mb-1.5" style="color:var(--text-muted)">اليوم</div>
+            <div class="flex flex-wrap gap-2" id="edit-day-selector"></div>
+          </div>
+        </div>
+        <div id="edit-week-info" class="mt-2 text-[12px] font-semibold" style="color:var(--text-muted)"></div>
+      </div>
 
-      <div id="cal-detail" class="mt-5 rounded-2xl card-surface p-5 hidden shadow-xl"></div>
+      <div class="rounded-2xl card-surface overflow-hidden shadow-xl">
+        <div class="px-4 py-2.5 flex items-center justify-between" style="border-bottom:1px solid var(--border);background:rgba(99,102,241,.06)">
+          <span id="edit-day-title" class="text-base font-extrabold text-white">—</span>
+          <div class="flex items-center gap-2">
+            <button id="add-session-btn" class="btn btn-primary" style="padding:7px 13px;font-size:13px">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              إضافة نشاط
+            </button>
+          </div>
+        </div>
+        <div class="p-3">
+          <div class="edit-grid-wrapper" style="height:calc(var(--hour-height) * 16.5)">
+            <div class="edit-time-axis" id="edit-time-axis"></div>
+            <div class="edit-canvas" id="edit-canvas">
+              <div class="snap-line" id="snap-line"></div>
+              <div class="drag-hint" id="drag-hint"></div>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <button id="save-edit-btn" class="btn btn-success">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              حفظ التعديلات
+            </button>
+            <button id="reset-edit-btn" class="btn btn-ghost">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              تراجع
+            </button>
+          </div>
+        </div>
+      </div>
     </section>
 
   </main>
@@ -366,9 +374,7 @@
   <div class="modal-enter w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl" style="background:var(--surface-2);border:1px solid var(--border-strong)">
     <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(99,102,241,.12),rgba(139,92,246,.06))">
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:rgba(99,102,241,.2);color:#a5b4fc" id="modal-icon-wrap">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        </div>
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:rgba(99,102,241,.2);color:#a5b4fc" id="modal-icon-wrap"></div>
         <div>
           <h3 id="modal-title" class="font-extrabold text-white text-lg leading-tight">ملاحظة النشاط</h3>
           <p id="modal-sub" class="text-[13px] font-semibold mt-0.5" style="color:var(--text-muted)">—</p>
@@ -378,7 +384,6 @@
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
-
     <div class="p-5">
       <div id="modal-view-mode">
         <div id="modal-note-display" class="note-display empty">لا توجد ملاحظة بعد</div>
@@ -393,12 +398,10 @@
           </button>
         </div>
       </div>
-
       <div id="modal-edit-mode" class="hidden">
         <textarea id="modal-textarea" class="note-textarea" placeholder="اكتب ملاحظتك حول هذا النشاط..."></textarea>
         <div class="flex items-center justify-between mt-2">
           <span id="modal-char-count" class="text-[12px] font-time" style="color:var(--text-muted)">0 / 1000</span>
-          <span class="text-[12px] font-semibold" style="color:var(--text-muted)">حفظ تلقائي معتمد</span>
         </div>
         <div class="flex gap-2 mt-3">
           <button id="modal-save-btn" class="btn btn-success flex-grow">
@@ -418,10 +421,11 @@
 /* =========================================================
    DATA
    ========================================================= */
-const START_HOUR = 4.5, END_HOUR = 21.0, HOUR_HEIGHT = 88;
+const START_HOUR = 4.5, END_HOUR = 21.0;
+const HOUR_HEIGHT = 64;
 const TOTAL_HEIGHT = (END_HOUR - START_HOUR) * HOUR_HEIGHT;
-const SLEEP_START_MIN = END_HOUR * 60;      // 21:00 = 1260
-const SLEEP_END_MIN   = START_HOUR * 60;    // 04:30 = 270
+const SLEEP_START_MIN = END_HOUR * 60;
+const SLEEP_END_MIN   = START_HOUR * 60;
 
 const ICONS = {
   math:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/></svg>`,
@@ -441,18 +445,20 @@ const ICONS = {
   school:`<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-8h6v8"/></svg>`
 };
 
+const ICON_NAMES = { math:"رياضيات", physics:"فيزياء", svt:"علوم", book:"كتاب", globe:"جغرافيا", mosque:"دين", philosophy:"فلسفة", trophy:"كأس", code:"برمجة", terminal:"تيرمنال", soccer:"كرة قدم", spanish:"إسبانية", quran:"قرآن", chess:"شطرنج", school:"مدرسة" };
+
 const THEMES = {
-  science:{bg:"linear-gradient(135deg,#059669,#065f46)",border:"#34d399",badge:"rgba(52,211,153,.22)",badgeText:"#6ee7b7"},
-  regional:{bg:"linear-gradient(135deg,#0284c7,#0c4a6e)",border:"#38bdf8",badge:"rgba(56,189,248,.22)",badgeText:"#7dd3fc"},
-  skill:{bg:"linear-gradient(135deg,#d97706,#78350f)",border:"#fbbf24",badge:"rgba(251,191,36,.22)",badgeText:"#fcd34d"},
-  sport:{bg:"linear-gradient(135deg,#e11d48,#7f1d1d)",border:"#fb7185",badge:"rgba(251,113,133,.22)",badgeText:"#fda4af"},
-  spanish:{bg:"linear-gradient(135deg,#7c3aed,#4c1d95)",border:"#a78bfa",badge:"rgba(167,139,250,.22)",badgeText:"#c4b5fd"},
-  quran:{bg:"linear-gradient(135deg,#0d9488,#134e4a)",border:"#2dd4bf",badge:"rgba(45,212,191,.22)",badgeText:"#5eead4"},
-  chess:{bg:"linear-gradient(135deg,#475569,#1e293b)",border:"#94a3b8",badge:"rgba(148,163,184,.22)",badgeText:"#cbd5e1"},
-  school:{bg:"linear-gradient(135deg,#374151,#111827)",border:"#6b7280",badge:"rgba(107,114,128,.28)",badgeText:"#d1d5db"}
+  science:{bg:"linear-gradient(135deg,#059669,#065f46)",border:"#34d399",badge:"rgba(52,211,153,.22)",badgeText:"#6ee7b7",name:"علوم"},
+  regional:{bg:"linear-gradient(135deg,#0284c7,#0c4a6e)",border:"#38bdf8",badge:"rgba(56,189,248,.22)",badgeText:"#7dd3fc",name:"مواد"},
+  skill:{bg:"linear-gradient(135deg,#d97706,#78350f)",border:"#fbbf24",badge:"rgba(251,191,36,.22)",badgeText:"#fcd34d",name:"مهارة"},
+  sport:{bg:"linear-gradient(135deg,#e11d48,#7f1d1d)",border:"#fb7185",badge:"rgba(251,113,133,.22)",badgeText:"#fda4af",name:"رياضة"},
+  spanish:{bg:"linear-gradient(135deg,#7c3aed,#4c1d95)",border:"#a78bfa",badge:"rgba(167,139,250,.22)",badgeText:"#c4b5fd",name:"إسبانية"},
+  quran:{bg:"linear-gradient(135deg,#0d9488,#134e4a)",border:"#2dd4bf",badge:"rgba(45,212,191,.22)",badgeText:"#5eead4",name:"قرآن"},
+  chess:{bg:"linear-gradient(135deg,#475569,#1e293b)",border:"#94a3b8",badge:"rgba(148,163,184,.22)",badgeText:"#cbd5e1",name:"شطرنج"},
+  school:{bg:"linear-gradient(135deg,#374151,#111827)",border:"#6b7280",badge:"rgba(107,114,128,.28)",badgeText:"#d1d5db",name:"مدرسة"}
 };
 
-const SCHEDULE_DATA = [
+const DEFAULT_SCHEDULE = [
   { day:"الإثنين", sessions:[
     { start:"04:30", end:"05:00", title:"قرآن", icon:"quran", theme:"quran" },
     { start:"05:00", end:"07:00", title:"رياضيات", icon:"math", theme:"science" },
@@ -537,27 +543,107 @@ const SCHEDULE_DATA = [
 /* =========================================================
    HELPERS
    ========================================================= */
-function timeToMinutes(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
-function pad(n){return String(n).padStart(2,'0');}
-function todayIndex(){const d=new Date().getDay();return d===0?6:d-1;}
-function storageKey(){return 'schedule_pro_v2';}
+const pad = n => String(n).padStart(2,'0');
+const clone = v => JSON.parse(JSON.stringify(v));
+const timeToMinutes = t => { const [h,m] = t.split(':').map(Number); return h*60+m; };
+const minutesToTime = m => { m = Math.max(0, Math.min(1439, Math.round(m))); return pad(Math.floor(m/60)) + ':' + pad(m%60); };
+const dateToDayIdx = d => (d.getDay()+6)%7;
+const todayIndex = () => dateToDayIdx(new Date());
+const startOfDay = d => new Date(d.getFullYear(),d.getMonth(),d.getDate());
+const addDays = (d,n) => { const r = new Date(d); r.setDate(r.getDate()+n); return r; };
+const getWeekStart = d => { const r = startOfDay(d); r.setDate(r.getDate()-dateToDayIdx(r)); return r; };
+const sameDay = (a,b) => a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+const formatDate = (d,o) => d.toLocaleDateString('ar-EG',o);
+const getWeekKey = d => {
+  const dd = new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  const wd = dd.getUTCDay()||7;
+  dd.setUTCDate(dd.getUTCDate()+4-wd);
+  const ys = new Date(Date.UTC(dd.getUTCFullYear(),0,1));
+  const w = Math.ceil((((dd-ys)/86400000)+1)/7);
+  return dd.getUTCFullYear()+"-W"+pad(w);
+};
+const isSchoolSession = s => s && (s.theme === 'school' || (s.title && s.title.trim() === 'مدرسة'));
+
+/* =========================================================
+   STORE
+   ========================================================= */
+const STORE_KEY = 'schedule_pro_v4';
 function loadStore(){
-  try{return JSON.parse(localStorage.getItem(storageKey()))||{notes:{},dayNotes:{}};}
-  catch(e){return {notes:{},dayNotes:{}};}
+  try{
+    const raw = JSON.parse(localStorage.getItem(STORE_KEY));
+    return {
+      notes: raw?.notes || {},
+      dayNotes: raw?.dayNotes || {},
+      schedule: raw?.schedule || clone(DEFAULT_SCHEDULE),
+      overrides: raw?.overrides || {}
+    };
+  }catch(e){
+    return { notes:{}, dayNotes:{}, schedule: clone(DEFAULT_SCHEDULE), overrides:{} };
+  }
 }
-function saveStore(s){localStorage.setItem(storageKey(),JSON.stringify(s));}
 let STORE = loadStore();
+function saveStore(){ localStorage.setItem(STORE_KEY, JSON.stringify(STORE)); }
+
+function getSessionsFor(date){
+  const weekKey = getWeekKey(date);
+  const idx = dateToDayIdx(date);
+  const ovr = STORE.overrides[weekKey]?.[idx];
+  return Array.isArray(ovr) ? ovr : STORE.schedule[idx].sessions;
+}
 
 /* =========================================================
    STATE
    ========================================================= */
 let activeDay = todayIndex();
-let calendarMode = false;
-let calYear = new Date().getFullYear();
-let calMonth = new Date().getMonth();
+let activeView = 'day';
+let weekViewDate = new Date();
 let noteCtx = { dayIdx:null, sessIdx:null, mode:'view' };
 let dayNoteEditing = false;
-let wasSleeping = false; // لتتبع تغيّر حالة النوم
+let wasSleeping = false;
+let soundEnabled = true;
+let lastActivityKey = null;
+const notified = new Set();
+
+/* =========================================================
+   AUDIO
+   ========================================================= */
+let audioCtx = null;
+function ensureAudio(){
+  if (!audioCtx){
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch(e){ return null; }
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function playStartSound(){
+  if (!soundEnabled) return;
+  const ctx = ensureAudio(); if (!ctx) return;
+  const now = ctx.currentTime;
+  [523.25, 659.25, 783.99].forEach((freq, i) => {
+    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+    osc.type = 'sine'; osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0, now + i*0.12);
+    gain.gain.linearRampToValueAtTime(0.18, now + i*0.12 + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + i*0.12 + 0.35);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(now + i*0.12); osc.stop(now + i*0.12 + 0.4);
+  });
+}
+function playEndSound(){
+  if (!soundEnabled) return;
+  const ctx = ensureAudio(); if (!ctx) return;
+  const now = ctx.currentTime;
+  [783.99, 659.25, 523.25].forEach((freq, i) => {
+    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+    osc.type = 'triangle'; osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0, now + i*0.15);
+    gain.gain.linearRampToValueAtTime(0.18, now + i*0.15 + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + i*0.15 + 0.4);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(now + i*0.15); osc.stop(now + i*0.15 + 0.45);
+  });
+}
 
 /* =========================================================
    TOAST
@@ -583,33 +669,43 @@ function toast(msg, type='success'){
 function renderNav(){
   const nav = document.getElementById('days-nav');
   nav.innerHTML = '';
-  SCHEDULE_DATA.forEach((d,i)=>{
+  const weekStart = getWeekStart(new Date());
+  STORE.schedule.forEach((d,i)=>{
     const btn = document.createElement('button');
     const isActive = i===activeDay;
     const isToday = i===todayIndex();
     btn.className = 'day-chip' + (isActive?' active':'');
-    const noteCount = d.sessions.filter((_,si)=>STORE.notes[`${i}-${si}`]).length;
+    const date = addDays(weekStart, i);
+    const sessions = getSessionsFor(date);
+    const noteCount = sessions.filter((_,si)=>STORE.notes[`${i}-${si}`]).length;
     btn.innerHTML = `<span>${d.day}</span>
       <span class="flex items-center gap-1.5">
-        ${noteCount?`<span class="text-[10px] font-black px-2 py-0.5 rounded" style="background:rgba(245,158,11,.2);color:#fbbf24">📝 ${noteCount}</span>`:''}
+        ${noteCount?`<span class="text-[10px] font-black px-2 py-0.5 rounded" style="background:rgba(245,158,11,.2);color:#fbbf24">${noteCount}</span>`:''}
         ${isToday?`<span class="text-[10px] font-black px-2 py-0.5 rounded" style="background:rgba(16,185,129,.25);color:#6ee7b7">اليوم</span>`:''}
       </span>`;
     btn.onclick = ()=>{ activeDay=i; renderDay(); renderNav(); syncMobileSelect(); };
     nav.appendChild(btn);
   });
 }
-function syncMobileSelect(){document.getElementById('mobile-day-select').value = activeDay;}
+function syncMobileSelect(){
+  const sel = document.getElementById('mobile-day-select');
+  if (sel) sel.value = activeDay;
+}
 
 /* =========================================================
    DAY VIEW
    ========================================================= */
 function renderDay(){
-  const day = SCHEDULE_DATA[activeDay];
+  const date = addDays(getWeekStart(new Date()), activeDay);
+  const sessions = getSessionsFor(date);
+  const day = STORE.schedule[activeDay];
+
   document.getElementById('day-title').textContent = day.day;
-  document.getElementById('day-count').textContent = day.sessions.length + ' نشاط';
+  document.getElementById('day-subtitle').textContent = formatDate(date, {day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('day-count').textContent = sessions.length + ' نشاط';
 
   let totalMin = 0;
-  day.sessions.forEach(s=>totalMin += (timeToMinutes(s.end) - timeToMinutes(s.start)));
+  sessions.forEach(s=>{ if (!isSchoolSession(s)) totalMin += (timeToMinutes(s.end) - timeToMinutes(s.start)); });
   const h = Math.floor(totalMin/60), m = totalMin%60;
   document.getElementById('day-hours').textContent = `${h}س ${m>0?m+'د':''}`.trim();
 
@@ -629,7 +725,7 @@ function renderDay(){
     timeAxis.appendChild(marker);
 
     const line = document.createElement('div');
-    line.className='grid-line absolute inset-x-0 pointer-events-none';
+    line.className='absolute inset-x-0 pointer-events-none';
     line.style.cssText = `top:${topPx}px;border-top:1px solid rgba(148,163,184,.09)`;
     dayGrid.appendChild(line);
   }
@@ -637,53 +733,51 @@ function renderDay(){
   const origin = START_HOUR*60;
   const now = new Date();
   const nowMin = now.getHours()*60 + now.getMinutes() + now.getSeconds()/60;
-  const today = todayIndex();
+  const isToday = activeDay === todayIndex();
 
-  day.sessions.forEach((s, idx)=>{
+  sessions.forEach((s, idx)=>{
     const sMin = timeToMinutes(s.start), eMin = timeToMinutes(s.end);
     const dur = eMin - sMin;
     const topPx = ((sMin-origin)/60)*HOUR_HEIGHT;
-    const hPx = Math.max((dur/60)*HOUR_HEIGHT - 6, 34);
-    const isNow = activeDay===today && nowMin>=sMin && nowMin<eMin;
-    const isPast = activeDay===today && nowMin>=eMin;
+    const hPx = Math.max((dur/60)*HOUR_HEIGHT - 4, 26);
+    const isNow = isToday && nowMin>=sMin && nowMin<eMin;
+    const isPast = isToday && nowMin>=eMin;
     const theme = THEMES[s.theme];
     const noteKey = `${activeDay}-${idx}`;
     const hasNote = !!STORE.notes[noteKey];
 
     const card = document.createElement('div');
-    card.style.top = (topPx+3)+'px';
+    card.style.top = (topPx+2)+'px';
     card.style.height = hPx+'px';
     card.style.background = theme.bg;
     card.style.border = `1.5px solid ${theme.border}`;
     card.style.borderRight = `5px solid ${theme.border}`;
     card.style.opacity = isPast ? '0.55' : '1';
-    card.className = 'session-card absolute inset-x-3 rounded-xl px-3.5 flex flex-col justify-center shadow-lg z-10' + (isNow?' is-now':'');
-    card.title = 'اضغط لإضافة / عرض ملاحظة';
+    card.className = 'session-card absolute inset-x-2.5 rounded-lg px-3 flex flex-col justify-center shadow-lg z-10' + (isNow?' is-now':'');
 
     const timeBadge = `<span class="theme-badge" style="background:${theme.badge};color:${theme.badgeText}">${s.start} - ${s.end}</span>`;
 
     if(dur<=30){
-      card.style.padding = '6px 12px';
+      card.style.padding = '4px 10px';
       card.innerHTML = `<div class="flex items-center justify-between gap-2">
-        <div class="flex items-center gap-2 min-w-0">
+        <div class="flex items-center gap-1.5 min-w-0">
           <span style="color:${theme.border}">${ICONS[s.icon]}</span>
-          <span class="text-[13px] font-extrabold text-white truncate">${s.title}</span>
-          ${hasNote?'<span class="text-[12px]" title="يوجد ملاحظة">📝</span>':''}
+          <span class="text-[12px] font-extrabold text-white truncate">${s.title}</span>
+          ${hasNote?'<span style="color:#fbbf24">•</span>':''}
         </div>${timeBadge}</div>`;
     } else {
-      card.innerHTML = `<div class="flex items-center justify-center gap-2.5 w-full">
+      card.innerHTML = `<div class="flex items-center justify-center gap-2 w-full">
         <span style="color:${theme.border}">${ICONS[s.icon]}</span>
-        <span class="text-[15px] font-extrabold text-white leading-tight truncate">${s.title}</span>
-        ${hasNote?'<span class="text-[13px]" title="يوجد ملاحظة">📝</span>':''}
+        <span class="text-[13.5px] font-extrabold text-white leading-tight truncate">${s.title}</span>
+        ${hasNote?'<span style="color:#fbbf24">•</span>':''}
       </div>
-      <div class="text-center mt-2">${timeBadge}</div>`;
+      <div class="text-center mt-1.5">${timeBadge}</div>`;
     }
-
     card.onclick = ()=> openNoteModal(activeDay, idx, s);
     dayGrid.appendChild(card);
   });
 
-  if(activeDay===today && nowMin>=START_HOUR*60 && nowMin<=END_HOUR*60){
+  if(isToday && nowMin>=START_HOUR*60 && nowMin<=END_HOUR*60){
     const top = ((nowMin-origin)/60)*HOUR_HEIGHT;
     const line = document.createElement('div');
     line.className='absolute inset-x-0 z-30 pointer-events-none';
@@ -694,8 +788,101 @@ function renderDay(){
     </div>`;
     dayGrid.appendChild(line);
   }
-
   renderDayNote();
+}
+
+/* =========================================================
+   WEEK VIEW — مع أيقونات
+   ========================================================= */
+function renderWeekView(){
+  const weekStart = getWeekStart(weekViewDate);
+  const weekEnd = addDays(weekStart, 6);
+  document.getElementById('week-subtitle').textContent =
+    formatDate(weekStart,{day:'numeric',month:'long'}) + ' — ' +
+    formatDate(weekEnd,{day:'numeric',month:'long',year:'numeric'});
+
+  const header = document.getElementById('week-header');
+  const body = document.getElementById('week-body');
+  header.innerHTML = '';
+  body.innerHTML = '';
+
+  const corner = document.createElement('div');
+  corner.className = 'week-head-cell';
+  corner.textContent = 'التوقيت';
+  header.appendChild(corner);
+
+  const today = new Date();
+  STORE.schedule.forEach((d,i)=>{
+    const date = addDays(weekStart, i);
+    const cell = document.createElement('div');
+    cell.className = 'week-head-cell' + (sameDay(date, today) ? ' today' : '');
+    cell.innerHTML = `<div>${d.day}</div><div class="date">${date.getDate()}/${date.getMonth()+1}</div>`;
+    header.appendChild(cell);
+  });
+
+  const timeCol = document.createElement('div');
+  timeCol.className = 'week-time-cell';
+  timeCol.style.height = TOTAL_HEIGHT+'px';
+  for(let hour=5; hour<=21; hour++){
+    const topPx = (hour-START_HOUR)*HOUR_HEIGHT;
+    const marker = document.createElement('div');
+    marker.className='absolute w-full flex items-center justify-center -translate-y-1/2 z-10';
+    marker.style.top = topPx+'px';
+    marker.innerHTML = `<span class="time-label" style="font-size:10.5px;padding:2px 8px">${pad(hour)}:00</span>`;
+    timeCol.appendChild(marker);
+  }
+  body.appendChild(timeCol);
+
+  const now = new Date();
+  const nowMin = now.getHours()*60 + now.getMinutes() + now.getSeconds()/60;
+
+  STORE.schedule.forEach((d,i)=>{
+    const date = addDays(weekStart, i);
+    const isToday = sameDay(date, today);
+    const col = document.createElement('div');
+    col.className = 'week-col' + (isToday ? ' today' : '');
+    col.style.height = TOTAL_HEIGHT+'px';
+
+    for(let hour=5; hour<=21; hour++){
+      const line = document.createElement('div');
+      line.className = 'absolute inset-x-0 pointer-events-none';
+      line.style.cssText = `top:${(hour-START_HOUR)*HOUR_HEIGHT}px;border-top:1px solid rgba(148,163,184,.07)`;
+      col.appendChild(line);
+    }
+
+    const sessions = getSessionsFor(date);
+    sessions.forEach((s, si)=>{
+      const sMin = timeToMinutes(s.start), eMin = timeToMinutes(s.end);
+      const dur = eMin - sMin;
+      const topPx = ((sMin - START_HOUR*60)/60)*HOUR_HEIGHT;
+      const hPx = Math.max((dur/60)*HOUR_HEIGHT - 3, 16);
+      const theme = THEMES[s.theme];
+      const isPast = isToday && nowMin >= eMin;
+
+      const card = document.createElement('button');
+      card.className = 'week-session';
+      card.style.cssText = `top:${topPx+1.5}px;height:${hPx}px;background:${theme.bg};border-right:3px solid ${theme.border};opacity:${isPast?.55:1}`;
+      card.title = `${s.title} — ${s.start} إلى ${s.end}`;
+      
+      // ✅ الأيقونة تظهر في التقويم الأسبوعي
+      card.innerHTML = `<span style="color:${theme.border};display:inline-flex;flex-shrink:0" class="icon-wrap">${ICONS[s.icon]}</span>
+        <div class="week-session-title">${s.title}</div>`;
+      card.querySelector('.icon-wrap svg').style.width = '11px';
+      card.querySelector('.icon-wrap svg').style.height = '11px';
+      
+      card.onclick = ()=> openNoteModal(i, si, s);
+      col.appendChild(card);
+    });
+
+    if(isToday && nowMin >= START_HOUR*60 && nowMin <= END_HOUR*60){
+      const line = document.createElement('div');
+      line.className = 'absolute inset-x-0 z-20 pointer-events-none';
+      line.style.top = ((nowMin-START_HOUR*60)/60*HOUR_HEIGHT)+'px';
+      line.innerHTML = '<div style="height:2px;background:#f43f5e;box-shadow:0 0 8px rgba(244,63,94,.8)"></div>';
+      col.appendChild(line);
+    }
+    body.appendChild(col);
+  });
 }
 
 /* =========================================================
@@ -717,11 +904,9 @@ function renderDayNote(){
     editBtn.classList.add('hidden');
     return;
   }
-
   viewBox.classList.remove('hidden');
   editBox.classList.add('hidden');
   editBtn.classList.remove('hidden');
-
   if(txt){
     display.textContent = txt;
     display.classList.remove('empty');
@@ -732,98 +917,91 @@ function renderDayNote(){
     addBtn.classList.remove('hidden');
   }
 }
-
-function startDayNoteEdit(){
-  dayNoteEditing = true;
-  renderDayNote();
-}
+function startDayNoteEdit(){ dayNoteEditing = true; renderDayNote(); }
 function saveDayNote(){
   const val = document.getElementById('day-note-textarea').value.trim();
   if(val) STORE.dayNotes[activeDay] = val;
   else delete STORE.dayNotes[activeDay];
-  saveStore(STORE);
-  dayNoteEditing = false;
-  renderDayNote();
-  toast('تم حفظ ملاحظة اليوم ✓');
+  saveStore(); dayNoteEditing = false; renderDayNote();
+  toast('تم حفظ ملاحظة اليوم');
 }
-function cancelDayNote(){
-  dayNoteEditing = false;
-  renderDayNote();
-}
+function cancelDayNote(){ dayNoteEditing = false; renderDayNote(); }
 
 /* =========================================================
-   NOW ACTIVITY — يدعم وضع النوم بين 21:00 و04:30
+   NOW — مع كشف بداية/نهاية النشاط وتشغيل الصوت
    ========================================================= */
 function updateNow(){
   const now = new Date();
-  const clock = document.getElementById('live-clock');
-  const dateEl = document.getElementById('live-date');
+  document.getElementById('live-clock').textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  document.getElementById('live-date').textContent = formatDate(now, {weekday:'long',day:'numeric',month:'long'});
+
   const nowAct = document.getElementById('now-activity');
   const nowRem = document.getElementById('now-remaining');
   const nowLabel = document.getElementById('now-label');
   const dot = document.getElementById('now-dot');
   const widget = document.getElementById('now-widget');
+  const badge = document.getElementById('now-badge');
 
-  clock.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-  dateEl.textContent = now.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'});
-
-  const ti = todayIndex();
-  const day = SCHEDULE_DATA[ti];
   const minNow = now.getHours()*60 + now.getMinutes() + now.getSeconds()/60;
+  const ti = todayIndex();
+  const sessions = getSessionsFor(now);
 
-  /* ---------- وضع النوم: 21:00 → 04:30 ---------- */
   const isSleeping = (minNow >= SLEEP_START_MIN) || (minNow < SLEEP_END_MIN);
 
   if(isSleeping){
-    // حساب الوقت المتبقي حتى 04:30 من اليوم التالي
-    let remMin;
-    if(minNow >= SLEEP_START_MIN){
-      // مثلاً الساعة 22:00 → متبقي (24:00 - 22:00) + 4:30 = 6:30
-      remMin = (1440 - minNow) + SLEEP_END_MIN;
-    } else {
-      // مثلاً الساعة 02:00 → متبقي 2:30 حتى 4:30
-      remMin = SLEEP_END_MIN - minNow;
-    }
-    const h = Math.floor(remMin/60);
-    const m = Math.floor(remMin%60);
-
-    // رسم القمر في مكان أيقونة النشاط
-    nowAct.innerHTML = `<span class="sleep-moon inline-block">🌙</span> وقت النوم`;
+    let remMin = minNow >= SLEEP_START_MIN ? (1440 - minNow) + SLEEP_END_MIN : SLEEP_END_MIN - minNow;
+    const h = Math.floor(remMin/60), m = Math.floor(remMin%60);
+    nowAct.textContent = 'وقت النوم';
     nowAct.style.color = '#c4b5fd';
-    nowRem.textContent = `متبقي ${h>0?h+'س ':''}${m}د حتى الاستيقاظ (04:30)`;
+    nowRem.textContent = `متبقي ${h>0?h+'س ':''}${m}د حتى الاستيقاظ`;
     nowRem.style.color = '#a78bfa';
     nowLabel.textContent = 'وضع الراحة';
     nowLabel.style.color = '#a78bfa';
     dot.style.background = '#a78bfa';
     dot.classList.remove('animate-pulse');
     widget.classList.add('sleep');
-
-    // عند الدخول إلى وضع النوم لأول مرة
-    if(!wasSleeping){
-      wasSleeping = true;
-      toast('🌙 موعد النوم — تصبح على خير', 'info');
-    }
+    badge.textContent = 'راحة';
+    badge.style.cssText = 'background:rgba(167,139,250,.15);color:#c4b5fd;border:1px solid rgba(167,139,250,.35)';
+    if(!wasSleeping){ wasSleeping = true; toast('موعد النوم — تصبح على خير', 'info'); }
+    lastActivityKey = null;
     return;
   }
 
-  /* ---------- أوقات النشاط العادية ---------- */
   if(wasSleeping){
     wasSleeping = false;
     widget.classList.remove('sleep');
-    toast('☀️ صباح الخير — بدأ وقت الأنشطة', 'success');
+    toast('صباح الخير — بدأ وقت الأنشطة', 'success');
   }
-
   nowLabel.textContent = 'الآن';
   nowLabel.style.color = 'var(--text-muted)';
 
-  const current = day.sessions.find(s=>{
+  const current = sessions.find(s=>{
     const sM = timeToMinutes(s.start), eM = timeToMinutes(s.end);
-    return minNow>=sM && minNow<eM;
+    return minNow >= sM && minNow < eM;
   });
+
+  let currentKey = null;
+  if(current){
+    const idx = sessions.indexOf(current);
+    currentKey = `${ti}-${idx}-${now.toDateString()}`;
+    if(lastActivityKey !== currentKey){
+      if(lastActivityKey !== null){
+        playStartSound();
+        toast(`بدأ: ${current.title}`, 'success');
+      }
+      lastActivityKey = currentKey;
+    }
+  } else {
+    if(lastActivityKey !== null){
+      playEndSound();
+      toast('انتهى النشاط', 'info');
+      lastActivityKey = null;
+    }
+  }
 
   if(current){
     const eM = timeToMinutes(current.end);
-    const rem = Math.max(0, eM-minNow);
+    const rem = Math.max(0, eM - minNow);
     const h = Math.floor(rem/60), m = Math.floor(rem%60);
     nowAct.textContent = current.title;
     nowAct.style.color = '#6ee7b7';
@@ -831,11 +1009,13 @@ function updateNow(){
     nowRem.style.color = '#6ee7b7';
     dot.style.background = '#6ee7b7';
     dot.classList.add('animate-pulse');
+    badge.textContent = 'جارٍ الآن';
+    badge.style.cssText = 'background:rgba(16,185,129,.15);color:#6ee7b7;border:1px solid rgba(16,185,129,.35)';
   } else {
-    const next = day.sessions.find(s=>timeToMinutes(s.start)>minNow);
+    const next = sessions.find(s=>timeToMinutes(s.start)>minNow);
     if(next){
       const sM = timeToMinutes(next.start);
-      const rem = sM-minNow;
+      const rem = sM - minNow;
       const h = Math.floor(rem/60), m = Math.floor(rem%60);
       nowAct.textContent = `التالي: ${next.title}`;
       nowAct.style.color = '#fcd34d';
@@ -843,31 +1023,27 @@ function updateNow(){
       nowRem.style.color = '#fcd34d';
       dot.style.background = '#fcd34d';
       dot.classList.remove('animate-pulse');
+      badge.textContent = 'قادم';
+      badge.style.cssText = 'background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.35)';
     } else {
-      // لا يوجد نشاط تالٍ في نفس اليوم (فترة فراغ قبل النوم)
-      const remToSleep = SLEEP_START_MIN - minNow;
-      const h = Math.floor(remToSleep/60);
-      const m = Math.floor(remToSleep%60);
       nowAct.textContent = 'وقت حر';
       nowAct.style.color = '#94a3b8';
-      nowRem.textContent = remToSleep>0
-        ? `النوم بعد ${h>0?h+'س ':''}${m}د`
-        : '';
+      nowRem.textContent = '';
       nowRem.style.color = 'var(--text-muted)';
       dot.style.background = '#94a3b8';
       dot.classList.remove('animate-pulse');
+      badge.textContent = 'جاهز';
+      badge.style.cssText = 'background:rgba(148,163,184,.1);color:#b8c2d4;border:1px solid var(--border)';
     }
   }
 
-  if(activeDay===ti && now.getSeconds()===0) renderDay();
+  if(activeDay === ti && now.getSeconds() === 0) renderDay();
 }
 
 /* =========================================================
    NOTIFICATIONS
    ========================================================= */
 let notifEnabled = false;
-const notified = new Set();
-
 async function enableNotifications(){
   if(!('Notification' in window)){toast('الإشعارات غير مدعومة','danger');return;}
   const perm = await Notification.requestPermission();
@@ -875,33 +1051,27 @@ async function enableNotifications(){
   const btn = document.getElementById('btn-enable-notif');
   if(notifEnabled){
     btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span class="hidden sm:inline">مفعلة</span>`;
-    btn.classList.add('enabled');
     btn.style.cssText='';
     btn.classList.add('notif-btn','enabled');
-    new Notification('تم تفعيل الإشعارات',{body:'سنذكرك قبل 5 دقائق من كل نشاط وعند بدايته.'});
-    toast('تم تفعيل الإشعارات ✓');
-  } else {
-    toast('لم يتم منح الصلاحية','danger');
-  }
+    new Notification('تم تفعيل الإشعارات',{body:'سنذكرك قبل 5 دقائق من كل نشاط.'});
+    toast('تم تفعيل الإشعارات');
+  } else toast('لم يتم منح الصلاحية','danger');
 }
-
 function checkNotifications(){
   if(!notifEnabled || Notification.permission!=='granted') return;
   const now = new Date();
-  const ti = todayIndex();
-  const day = SCHEDULE_DATA[ti];
+  const sessions = getSessionsFor(now);
   const minNow = now.getHours()*60 + now.getMinutes();
-
-  day.sessions.forEach((s,i)=>{
+  sessions.forEach((s,i)=>{
     const sM = timeToMinutes(s.start);
-    const key = `${ti}-${i}-${now.toDateString()}`;
+    const key = `${todayIndex()}-${i}-${now.toDateString()}`;
     if(minNow===sM-5 && !notified.has(key+'-w')){
       notified.add(key+'-w');
-      new Notification('⏰ اقتراب نشاط',{body:`بعد 5 دقائق: ${s.title} (${s.start})`});
+      new Notification('اقتراب نشاط',{body:`بعد 5 دقائق: ${s.title} (${s.start})`});
     }
     if(minNow===sM && !notified.has(key+'-s')){
       notified.add(key+'-s');
-      new Notification('▶ بدء النشاط',{body:`الآن: ${s.title} — ${s.start} إلى ${s.end}`});
+      new Notification('بدء النشاط',{body:`الآن: ${s.title} — ${s.start} إلى ${s.end}`});
     }
   });
 }
@@ -914,37 +1084,31 @@ function openNoteModal(dayIdx, sessIdx, session){
   document.getElementById('modal-title').textContent = session.title;
   const theme = THEMES[session.theme];
   document.getElementById('modal-sub').innerHTML =
-    `<span style="color:${theme.border}">${SCHEDULE_DATA[dayIdx].day}</span> • <span class="font-time">${session.start} - ${session.end}</span>`;
+    `<span style="color:${theme.border}">${STORE.schedule[dayIdx].day}</span> • <span class="font-time">${session.start} - ${session.end}</span>`;
   document.getElementById('modal-icon-wrap').innerHTML = ICONS[session.icon];
   document.getElementById('modal-icon-wrap').style.background = theme.badge;
   document.getElementById('modal-icon-wrap').style.color = theme.border;
-
   setModalMode('view');
   document.getElementById('modal-note').classList.remove('hidden');
   document.getElementById('modal-note').classList.add('flex');
 }
-
 function closeNoteModal(){
   document.getElementById('modal-note').classList.add('hidden');
   document.getElementById('modal-note').classList.remove('flex');
   noteCtx = { dayIdx:null, sessIdx:null, mode:'view' };
 }
-
 function setModalMode(mode){
   noteCtx.mode = mode;
   const viewBox = document.getElementById('modal-view-mode');
   const editBox = document.getElementById('modal-edit-mode');
   const key = `${noteCtx.dayIdx}-${noteCtx.sessIdx}`;
   const current = STORE.notes[key] || '';
-
   if(mode==='view'){
     viewBox.classList.remove('hidden');
     editBox.classList.add('hidden');
-
     const display = document.getElementById('modal-note-display');
     const delBtn = document.getElementById('modal-delete-btn');
     const editLabel = document.getElementById('modal-edit-label');
-
     if(current){
       display.textContent = current;
       display.classList.remove('empty');
@@ -965,114 +1129,315 @@ function setModalMode(mode){
     setTimeout(()=>ta.focus(),40);
   }
 }
-
 function updateCharCount(){
   const ta = document.getElementById('modal-textarea');
   document.getElementById('modal-char-count').textContent = `${ta.value.length} / 1000`;
 }
-
 function saveSessionNote(){
   const val = document.getElementById('modal-textarea').value.trim();
   const key = `${noteCtx.dayIdx}-${noteCtx.sessIdx}`;
   if(val) STORE.notes[key] = val;
   else delete STORE.notes[key];
-  saveStore(STORE);
-  setModalMode('view');
-  renderDay();
-  renderNav();
-  toast('تم حفظ الملاحظة ✓');
+  saveStore(); setModalMode('view'); renderDay(); renderNav();
+  toast('تم حفظ الملاحظة');
 }
-
 function deleteSessionNote(){
   const key = `${noteCtx.dayIdx}-${noteCtx.sessIdx}`;
   if(!STORE.notes[key]) return;
   if(!confirm('هل تريد حذف هذه الملاحظة؟')) return;
   delete STORE.notes[key];
-  saveStore(STORE);
-  setModalMode('view');
-  renderDay();
-  renderNav();
+  saveStore(); setModalMode('view'); renderDay(); renderNav();
   toast('تم حذف الملاحظة','info');
 }
 
 /* =========================================================
-   CALENDAR
+   EDIT VIEW — مع السحب والإفلات
    ========================================================= */
-function monthName(y,m){
-  return new Date(y,m,1).toLocaleDateString('ar-EG',{month:'long',year:'numeric'});
-}
+let editScope = 'permanent';
+let editDayIdx = todayIndex();
+let editSessions = [];
 
-function renderCalendar(){
-  document.getElementById('cal-month').textContent = monthName(calYear,calMonth);
-  const grid = document.getElementById('cal-grid');
-  grid.innerHTML = '';
-  const first = new Date(calYear,calMonth,1);
-  const startDay = first.getDay();
-  const daysInMonth = new Date(calYear,calMonth+1,0).getDate();
-  const today = new Date();
-
-  for(let i=0;i<startDay;i++){
-    const e = document.createElement('div');
-    e.className = 'cal-cell is-empty';
-    grid.appendChild(e);
-  }
-
-  for(let d=1; d<=daysInMonth; d++){
-    const date = new Date(calYear,calMonth,d);
-    const jsDay = date.getDay();
-    const schedIdx = jsDay===0?6:jsDay-1;
-    const dayData = SCHEDULE_DATA[schedIdx];
-    const total = dayData.sessions.length;
-    const note = STORE.dayNotes[schedIdx] || '';
-    const isToday = date.toDateString()===today.toDateString();
-
-    const cell = document.createElement('button');
-    cell.className = 'cal-cell' + (isToday?' is-today':'');
-    cell.innerHTML = `
-      <div class="flex items-center justify-between w-full">
-        <span class="font-time text-sm ${isToday?'text-indigo-200':'text-white'}">${d}</span>
-        ${total?`<span class="text-[10px] font-black px-2 py-0.5 rounded" style="background:rgba(99,102,241,.25);color:#c7d2fe">${total}</span>`:''}
-      </div>
-      <div class="flex gap-1 mt-2 flex-wrap">
-        ${dayData.sessions.slice(0,8).map(s=>`<span class="presence-dot" style="background:${THEMES[s.theme].border}"></span>`).join('')}
-      </div>
-      <div class="text-[10px] mt-auto truncate" style="color:var(--text-muted)">${note?'📝 '+note.slice(0,10):''}</div>`;
-    cell.onclick = ()=> showCalDetail(d, schedIdx, dayData);
-    grid.appendChild(cell);
+function loadEditSessions(){
+  if (editScope === 'permanent'){
+    editSessions = clone(STORE.schedule[editDayIdx].sessions);
+  } else {
+    const weekKey = getWeekKey(new Date());
+    const ovr = STORE.overrides[weekKey]?.[editDayIdx];
+    editSessions = clone(Array.isArray(ovr) ? ovr : STORE.schedule[editDayIdx].sessions);
   }
 }
 
-function showCalDetail(dayNum, schedIdx, dayData){
-  const detail = document.getElementById('cal-detail');
-  detail.classList.remove('hidden');
-  const note = STORE.dayNotes[schedIdx] || '';
-  detail.innerHTML = `
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <h3 class="font-black text-white text-xl">${dayData.day} ${dayNum}</h3>
-        <p class="text-sm font-semibold" style="color:var(--text-muted)">${dayData.sessions.length} نشاط</p>
+function renderEditView(){
+  const sel = document.getElementById('edit-day-selector');
+  sel.innerHTML = '';
+  STORE.schedule.forEach((d,i)=>{
+    const b = document.createElement('button');
+    b.className = 'day-tab' + (editDayIdx===i?' active':'');
+    b.textContent = d.day;
+    b.onclick = ()=>{
+      editDayIdx = i;
+      loadEditSessions();
+      renderEditView();
+    };
+    sel.appendChild(b);
+  });
+
+  document.getElementById('edit-day-title').textContent = STORE.schedule[editDayIdx].day;
+  const info = document.getElementById('edit-week-info');
+  if (editScope === 'permanent'){
+    info.textContent = 'التعديلات ستُطبق على كل الأسابيع القادمة';
+    info.style.color = '#6ee7b7';
+  } else {
+    const ws = getWeekStart(new Date());
+    info.textContent = `التعديلات ستُطبق على أسبوع ${formatDate(ws,{day:'numeric',month:'long'})} فقط`;
+    info.style.color = '#fcd34d';
+  }
+
+  renderEditGrid();
+}
+
+/* ==== شبكة التعديل مع السحب والإفلات ==== */
+function renderEditGrid(){
+  const axis = document.getElementById('edit-time-axis');
+  const canvas = document.getElementById('edit-canvas');
+  axis.innerHTML = '';
+  // Keep snap line and drag hint
+  const snapLine = document.getElementById('snap-line');
+  const dragHint = document.getElementById('drag-hint');
+  canvas.innerHTML = '';
+  canvas.appendChild(snapLine);
+  canvas.appendChild(dragHint);
+  canvas.style.height = TOTAL_HEIGHT + 'px';
+  axis.style.height = TOTAL_HEIGHT + 'px';
+
+  // الساعات على المحور
+  for (let hour = 5; hour <= 21; hour++){
+    const topPx = (hour - START_HOUR) * HOUR_HEIGHT;
+    const marker = document.createElement('div');
+    marker.className = 'mark';
+    marker.style.top = topPx + 'px';
+    marker.innerHTML = `<span class="time-label" style="font-size:10.5px;padding:2px 7px">${pad(hour)}:00</span>`;
+    axis.appendChild(marker);
+
+    const line = document.createElement('div');
+    line.style.cssText = `position:absolute;left:0;right:0;top:${topPx}px;border-top:1px solid rgba(148,163,184,.09);pointer-events:none`;
+    canvas.appendChild(line);
+  }
+
+  // الجلسات
+  editSessions.forEach((s, i)=>{
+    const sMin = timeToMinutes(s.start), eMin = timeToMinutes(s.end);
+    const dur = eMin - sMin;
+    const topPx = ((sMin - START_HOUR*60)/60) * HOUR_HEIGHT;
+    const hPx = Math.max((dur/60)*HOUR_HEIGHT - 3, 24);
+    const theme = THEMES[s.theme];
+
+    const el = document.createElement('div');
+    el.className = 'edit-session';
+    el.style.cssText = `top:${topPx+1.5}px;height:${hPx}px;background:${theme.bg};border:1.5px solid ${theme.border};border-right:5px solid ${theme.border}`;
+    el.dataset.idx = i;
+
+    el.innerHTML = `
+      <div class="sess-delete" title="حذف">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </div>
-      <button onclick="document.getElementById('cal-detail').classList.add('hidden')" class="w-9 h-9 rounded-lg flex items-center justify-center transition hover:bg-white/10" style="color:var(--text-muted)">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    ${note?`<div class="note-display mb-4" style="font-size:14px;padding:12px 14px">📝 ${note}</div>`:''}
-    <div class="max-h-72 overflow-y-auto space-y-1.5 pr-1">
-      ${dayData.sessions.map((s,i)=>{
-        const n = STORE.notes[`${schedIdx}-${i}`];
-        const theme = THEMES[s.theme];
-        return `<div class="flex items-start justify-between gap-3 rounded-lg px-3 py-2.5" style="background:rgba(148,163,184,.04);border-right:3px solid ${theme.border}">
-          <div class="flex items-center gap-2 min-w-0">
-            <span style="color:${theme.border}">${ICONS[s.icon]}</span>
-            <div class="min-w-0">
-              <div class="text-sm font-bold text-white truncate">${s.title}</div>
-              ${n?`<div class="text-[11px] mt-0.5 truncate" style="color:#fcd34d">📝 ${n}</div>`:''}
-            </div>
-          </div>
-          <span class="font-time text-xs shrink-0" style="color:var(--text-muted)">${s.start}-${s.end}</span>
-        </div>`;
-      }).join('')}
-    </div>`;
+      <div class="sess-title">
+        <span class="sess-icon" style="color:${theme.border}">${ICONS[s.icon]}</span>
+        ${s.title}
+      </div>
+      ${hPx > 42 ? `<div class="sess-time">${s.start} — ${s.end}</div>` : ''}
+      <div class="handle-resize" title="اسحب لتغيير المدة"></div>
+    `;
+    // ضبط حجم أيقونة الجلسة
+    const iconSvg = el.querySelector('.sess-icon svg');
+    if (iconSvg){ iconSvg.style.width = '13px'; iconSvg.style.height = '13px'; }
+
+    // زر الحذف
+    el.querySelector('.sess-delete').onclick = (ev)=>{
+      ev.stopPropagation();
+      if (!confirm(`حذف "${s.title}"؟`)) return;
+      editSessions.splice(i, 1);
+      renderEditGrid();
+    };
+
+    // السحب / تغيير الحجم
+    makeSessionInteractive(el, i, 'move');
+    const handle = el.querySelector('.handle-resize');
+    makeSessionInteractive(handle, i, 'resize');
+
+    canvas.appendChild(el);
+  });
+}
+
+/* ==== منطق السحب — Move & Resize مع Snap إلى 15 دقيقة ==== */
+function makeSessionInteractive(el, idx, mode){
+  let startY = 0, startTop = 0, startHeight = 0, startMinutes = 0, startDur = 0;
+  let moved = false;
+
+  function onDown(e){
+    if (e.button !== undefined && e.button !== 0) return;
+    e.preventDefault();
+    const pe = e.touches ? e.touches[0] : e;
+    startY = pe.clientY;
+    const s = editSessions[idx];
+    startMinutes = timeToMinutes(s.start);
+    startDur = timeToMinutes(s.end) - startMinutes;
+    const rect = el.getBoundingClientRect();
+    startTop = rect.top;
+    startHeight = rect.height;
+    moved = false;
+    el.classList.add(mode === 'move' ? 'dragging' : 'resizing');
+    showDragHint(el, mode);
+
+    const onMove = (ev)=>{
+      const pe2 = ev.touches ? ev.touches[0] : ev;
+      const dy = pe2.clientY - startY;
+      if (Math.abs(dy) > 2) moved = true;
+      const dyMin = (dy / HOUR_HEIGHT) * 60;
+      const snappedDyMin = Math.round(dyMin / 15) * 15;
+      const snapLine = document.getElementById('snap-line');
+      const hint = document.getElementById('drag-hint');
+
+      if (mode === 'move'){
+        let newStart = startMinutes + snappedDyMin;
+        newStart = Math.max(START_HOUR*60, Math.min(END_HOUR*60 - startDur, newStart));
+        const newEnd = newStart + startDur;
+        editSessions[idx].start = minutesToTime(newStart);
+        editSessions[idx].end = minutesToTime(newEnd);
+        const topPx = ((newStart - START_HOUR*60)/60) * HOUR_HEIGHT;
+        el.style.top = (topPx + 1.5) + 'px';
+        snapLine.style.top = topPx + 'px';
+        snapLine.classList.add('show');
+        if (hint) hint.textContent = `${minutesToTime(newStart)} — ${minutesToTime(newEnd)}`;
+        const timeEl = el.querySelector('.sess-time');
+        if (timeEl) timeEl.textContent = `${minutesToTime(newStart)} — ${minutesToTime(newEnd)}`;
+      } else {
+        let newDur = startDur + snappedDyMin;
+        newDur = Math.max(15, Math.min(END_HOUR*60 - startMinutes, newDur));
+        const newEnd = startMinutes + newDur;
+        editSessions[idx].end = minutesToTime(newEnd);
+        const hPx = Math.max((newDur/60)*HOUR_HEIGHT - 3, 24);
+        el.style.height = hPx + 'px';
+        const bottomTop = ((newEnd - START_HOUR*60)/60) * HOUR_HEIGHT;
+        snapLine.style.top = bottomTop + 'px';
+        snapLine.classList.add('show');
+        if (hint) hint.textContent = `${minutesToTime(startMinutes)} — ${minutesToTime(newEnd)}`;
+        const timeEl = el.querySelector('.sess-time');
+        if (timeEl) timeEl.textContent = `${minutesToTime(startMinutes)} — ${minutesToTime(newEnd)}`;
+        else if (hPx > 42){
+          const div = document.createElement('div');
+          div.className = 'sess-time';
+          div.textContent = `${minutesToTime(startMinutes)} — ${minutesToTime(newEnd)}`;
+          el.insertBefore(div, el.querySelector('.handle-resize'));
+        }
+      }
+    };
+
+    const onUp = ()=>{
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      document.removeEventListener('touchmove', onMove);
+      document.removeEventListener('touchend', onUp);
+      el.classList.remove('dragging', 'resizing');
+      document.getElementById('snap-line').classList.remove('show');
+      hideDragHint();
+      if (moved) toast(`تم تحديث: ${editSessions[idx].start} → ${editSessions[idx].end}`, 'info');
+    };
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onUp);
+  }
+
+  el.addEventListener('mousedown', onDown);
+  el.addEventListener('touchstart', onDown, { passive: false });
+}
+
+function showDragHint(el, mode){
+  const hint = document.getElementById('drag-hint');
+  if (!hint) return;
+  hint.classList.add('show');
+  hint.textContent = editSessions[el.dataset.idx]
+    ? `${editSessions[el.dataset.idx].start} — ${editSessions[el.dataset.idx].end}`
+    : '';
+}
+function hideDragHint(){
+  const hint = document.getElementById('drag-hint');
+  if (hint) hint.classList.remove('show');
+}
+
+function saveEdit(){
+  for (const s of editSessions){
+    const st = timeToMinutes(s.start), en = timeToMinutes(s.end);
+    if (!s.title || !s.title.trim()){ toast('اكتب اسمًا لكل نشاط','danger'); return; }
+    if (!Number.isFinite(st) || !Number.isFinite(en) || st < START_HOUR*60 || en > END_HOUR*60 || en <= st){
+      toast('تحقق من الوقت: النهاية بعد البداية وبين 04:30 و21:00','danger'); return;
+    }
+    s.title = s.title.trim();
+  }
+  if (editScope === 'permanent'){
+    STORE.schedule[editDayIdx].sessions = clone(editSessions);
+    saveStore();
+    toast('تم حفظ التعديلات الدائمة');
+  } else {
+    const weekKey = getWeekKey(new Date());
+    if (!STORE.overrides[weekKey]) STORE.overrides[weekKey] = {};
+    STORE.overrides[weekKey][editDayIdx] = clone(editSessions);
+    saveStore();
+    toast('تم حفظ تعديل هذا الأسبوع');
+  }
+  renderDay(); renderNav();
+  if (activeView === 'week') renderWeekView();
+  loadEditSessions(); renderEditView();
+}
+
+/* ==== إضافة نشاط جديد ==== */
+function addNewSession(){
+  // البحث عن فجوة فارغة
+  const sorted = editSessions.slice().sort((a,b)=> timeToMinutes(a.start) - timeToMinutes(b.start));
+  let newStart = 8*60, newEnd = 9*60;
+  for (let m = START_HOUR*60; m <= END_HOUR*60 - 60; m += 30){
+    const conflict = sorted.some(s => {
+      const sM = timeToMinutes(s.start), eM = timeToMinutes(s.end);
+      return !(m + 60 <= sM || m >= eM);
+    });
+    if (!conflict){ newStart = m; newEnd = m + 60; break; }
+  }
+  editSessions.push({
+    start: minutesToTime(newStart),
+    end: minutesToTime(newEnd),
+    title: 'نشاط جديد',
+    icon: 'book',
+    theme: 'regional'
+  });
+  renderEditGrid();
+  // التمرير إلى النشاط الجديد + رسالة
+  setTimeout(()=>{
+    const last = document.querySelector('.edit-session:last-of-type');
+    if (last) last.scrollIntoView({ behavior:'smooth', block:'center' });
+    toast('تمت إضافة نشاط جديد — اسحبه للمكان المناسب', 'info');
+  }, 100);
+}
+
+/* =========================================================
+   VIEW SWITCHER
+   ========================================================= */
+function switchView(v){
+  activeView = v;
+  ['day','week','edit'].forEach(name=>{
+    document.getElementById('view-'+name).classList.toggle('hidden', name !== v);
+  });
+  document.querySelectorAll('.view-tab').forEach(b=>{
+    const isActive = b.dataset.view === v;
+    b.classList.toggle('active', isActive);
+    b.style.cssText = isActive
+      ? 'background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;box-shadow:0 4px 16px -4px rgba(99,102,241,.5)'
+      : '';
+  });
+  if (v === 'day') renderDay();
+  if (v === 'week') renderWeekView();
+  if (v === 'edit'){ loadEditSessions(); renderEditView(); }
 }
 
 /* =========================================================
@@ -1080,7 +1445,7 @@ function showCalDetail(dayNum, schedIdx, dayData){
    ========================================================= */
 document.addEventListener('DOMContentLoaded', ()=>{
   const sel = document.getElementById('mobile-day-select');
-  SCHEDULE_DATA.forEach((d,i)=>{
+  STORE.schedule.forEach((d,i)=>{
     const o = document.createElement('option');
     o.value = i; o.textContent = d.day; sel.appendChild(o);
   });
@@ -1102,24 +1467,38 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   document.getElementById('btn-enable-notif').onclick = enableNotifications;
 
-  document.getElementById('btn-calendar').onclick = ()=>{
-    calendarMode = !calendarMode;
-    document.getElementById('view-day').classList.toggle('hidden', calendarMode);
-    document.getElementById('view-calendar').classList.toggle('hidden', !calendarMode);
-    const btn = document.getElementById('btn-calendar');
-    if(calendarMode){
-      btn.style.background='linear-gradient(135deg,#6366f1,#8b5cf6)';
-      btn.style.color='#fff';
-      btn.style.border='none';
-      renderCalendar();
-    } else {
-      btn.style.background='';
-      btn.style.color='';
-      btn.style.border='';
-    }
+  document.getElementById('btn-sound').onclick = ()=>{
+    soundEnabled = !soundEnabled;
+    ensureAudio();
+    document.getElementById('sound-label').textContent = soundEnabled ? 'الأصوات' : 'صامت';
+    document.getElementById('btn-sound').style.cssText = soundEnabled ? '' : 'background:rgba(239,68,68,.12);color:#fca5a5;border:1px solid rgba(239,68,68,.3)';
+    toast(soundEnabled ? 'تم تفعيل الأصوات' : 'تم كتم الأصوات', soundEnabled ? 'success' : 'info');
+    if (soundEnabled) playStartSound();
   };
-  document.getElementById('cal-prev').onclick = ()=>{ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); };
-  document.getElementById('cal-next').onclick = ()=>{ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); };
+
+  document.getElementById('week-prev').onclick = ()=>{ weekViewDate = addDays(weekViewDate, -7); renderWeekView(); };
+  document.getElementById('week-next').onclick = ()=>{ weekViewDate = addDays(weekViewDate, 7); renderWeekView(); };
+  document.getElementById('week-today').onclick = ()=>{ weekViewDate = new Date(); renderWeekView(); };
+
+  document.querySelectorAll('.scope-btn').forEach(b=>{
+    b.onclick = ()=>{
+      editScope = b.dataset.scope;
+      document.querySelectorAll('.scope-btn').forEach(x=>x.classList.toggle('active', x.dataset.scope === editScope));
+      loadEditSessions();
+      renderEditView();
+    };
+  });
+  document.getElementById('add-session-btn').onclick = addNewSession;
+  document.getElementById('save-edit-btn').onclick = saveEdit;
+  document.getElementById('reset-edit-btn').onclick = ()=>{
+    if (!confirm('التراجع عن التعديلات غير المحفوظة؟')) return;
+    loadEditSessions();
+    renderEditGrid();
+  };
+
+  document.querySelectorAll('.view-tab').forEach(b=>{
+    b.onclick = ()=> switchView(b.dataset.view);
+  });
 
   document.addEventListener('keydown', e=>{
     if(e.key==='Escape'){
@@ -1131,9 +1510,12 @@ document.addEventListener('DOMContentLoaded', ()=>{
   renderNav();
   renderDay();
   syncMobileSelect();
+  switchView('day');
   updateNow();
   setInterval(updateNow, 1000);
   setInterval(checkNotifications, 15000);
+
+  document.addEventListener('click', ()=> ensureAudio(), { once: true });
 });
 </script>
 </body>
